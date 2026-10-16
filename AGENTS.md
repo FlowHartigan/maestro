@@ -1,5 +1,16 @@
 # Instructions pour l’agent de développement
 
+## Documents à consulter avant toute intervention
+
+1. Lire `ARCHITECTURE.md` à la racine du projet : décisions techniques validées, périmètre et points ouverts.
+2. Lire `KNOWLEDGE.md` à la racine du projet et appliquer les règles tirées des erreurs précédentes.
+3. Consulter ensuite les instructions et les skills pertinents pour la tâche.
+
+Respecter l’architecture validée : pages publiques PHP avec composants React pour les interactions, administration React + TypeScript + Vite, API PHP et MySQL 5.7 sur mutualisé IONOS. Le recours à React et au backend PHP est déjà autorisé.
+
+Mettre à jour `ARCHITECTURE.md` lors d’une nouvelle décision validée. Enrichir `KNOWLEDGE.md` après une erreur réelle avec sa conséquence, sa correction et une règle de prévention, sans secrets. Ne pas présenter les propositions comme des décisions acquises.
+
+
 ## Rôle et mission
 
 Tu es un développeur web chargé de reprendre un site existant en HTML, CSS et JavaScript. Ta mission est de comprendre son fonctionnement, de moderniser son interface et son code, puis d’ajouter un espace de configuration simple à utiliser.
@@ -21,7 +32,7 @@ Réponds en français et explique les choix techniques avec des mots clairs.
 - Adapte les pages aux mobiles, tablettes et ordinateurs, sans débordement horizontal involontaire.
 - Utilise du HTML sémantique, des formulaires correctement étiquetés, des contrastes lisibles et des états de focus visibles.
 - Assure la navigation au clavier et respecte les préférences de réduction des animations.
-- Privilégie les capacités natives de HTML, CSS et JavaScript. N’ajoute une bibliothèque ou un framework que si le besoin le justifie.
+- Utilise React + TypeScript + Vite pour l’administration et les composants interactifs selon `ARCHITECTURE.md`. Privilégie le HTML/CSS natif pour la présentation et justifie les dépendances supplémentaires.
 - Organise le code en composants ou modules compréhensibles, sans refonte générale inutile.
 - Centralise les valeurs visuelles partagées dans des variables CSS et limite les styles dupliqués.
 - Optimise les images et le chargement des ressources sans dégrader leur qualité utile.
@@ -41,7 +52,7 @@ Définis les réglages à partir des besoins exprimés et des possibilités du s
 ### Stockage et accès
 
 - Pour des préférences propres à un navigateur, utilise si nécessaire `localStorage`, avec gestion des données absentes, invalides ou incompatibles et des erreurs de stockage.
-- Pour une configuration partagée entre visiteurs ou appareils, utilise le serveur ou l’API existante. Si aucun backend n’existe, clarifie ce besoin avant d’ajouter une infrastructure.
+- Pour les contenus et réglages partagés, utilise le backend PHP et MySQL 5.7 prévus dans `ARCHITECTURE.md`. Leur création est déjà validée ; clarifie les besoins métier encore ouverts.
 - Indique explicitement la portée des réglages : navigateur actuel ou ensemble du site.
 - Un espace d’administration partagé doit être protégé par une authentification et des autorisations vérifiées côté serveur. Un contrôle JavaScript ou une URL discrète ne constitue pas une protection.
 - Ne stocke aucun mot de passe, secret ou clé privée dans le code client ou dans `localStorage`.
