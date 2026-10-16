@@ -4,13 +4,14 @@ type Slot = [string, string];
 type Hours = { days: Slot[][]; version: number };
 type Props = {
   csrf: string;
+  venue: 'pizza' | 'casa';
   request: (action: string, body?: FormData | object, csrf?: string) => Promise<{ hours: Hours; defaults: Slot[][] }>;
   onDirty: (dirty: boolean) => void;
   onBusy: (busy: boolean) => void;
 };
-const labels = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche', 'Jours fériés'];
+const labels = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
 
-export default function HoursEditor({ csrf, request, onDirty, onBusy }: Props) {
+export default function HoursEditor({ csrf, venue, request, onDirty, onBusy }: Props) {
   const [saved, setSaved] = useState<Hours | null>(null);
   const [days, setDays] = useState<Slot[][]>([]);
   const [defaults, setDefaults] = useState<Slot[][]>([]);
@@ -24,7 +25,7 @@ export default function HoursEditor({ csrf, request, onDirty, onBusy }: Props) {
   async function load() {
     setError(''); setBusy(true); onBusy(true);
     try {
-      const result = await request('hours');
+      const result = await request(`hours&venue=${venue}`);
       setSaved(result.hours); setDays(result.hours.days); setDefaults(result.defaults); setNotice('');
     } catch (e) { setError((e as Error).message); }
     finally { setBusy(false); onBusy(false); }
@@ -43,16 +44,16 @@ export default function HoursEditor({ csrf, request, onDirty, onBusy }: Props) {
     }
     setBusy(true); onBusy(true); setError(''); setNotice('');
     try {
-      const result = await request('save-hours', { days, version: saved.version }, csrf);
+      const result = await request('save-hours', { days, version: saved.version, venue }, csrf);
       setSaved(result.hours); setDays(result.hours.days); onDirty(false);
-      setNotice('Horaires enregistrés. Ils sont à jour sur tout le site.');
+      setNotice('Horaires enregistrés. Les horaires de cet établissement sont à jour sur le site.');
     } catch (e) { setError((e as Error).message); }
     finally { setBusy(false); onBusy(false); }
   }
   return <section className="form-panel hours-panel" aria-labelledby="hours-heading">
     <div className="form-heading"><h1 id="hours-heading">Vos horaires</h1><span>{dirty ? 'Non enregistré' : saved ? 'Enregistré' : 'Chargement…'}</span></div>
-    <p>Horaires communs à Clermont-Ferrand et Chamalières, affichés sur l’ensemble du site.</p>
-    <p className="hours-help" id="hours-help">Jusqu’à deux créneaux par jour. Pour une ouverture en continu, gardez un seul créneau. La ligne « Jours fériés » remplace les horaires du jour concerné.</p>
+    <p>{venue === 'casa' ? 'La Casa di Maestro · Beaumont' : 'Pizza Maestro · Clermont-Ferrand'} — horaires affichés sur le site.</p>
+    <p className="hours-help" id="hours-help">Jusqu’à deux créneaux par jour. Pour une ouverture en continu, gardez un seul créneau.</p>
     {error && <div ref={errorRef} tabIndex={-1} className="error" role="alert">{error} <button type="button" disabled={busy} onClick={() => { if (!dirty || window.confirm('Abandonner les modifications et recharger les horaires ?')) void load(); }}>Recharger</button></div>}
     {notice && <p role="status" className="success">{notice}</p>}
     {!saved && !error && <p role="status">Chargement des horaires…</p>}

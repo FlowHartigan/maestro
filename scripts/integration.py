@@ -75,13 +75,13 @@ import copy
 initial=call('hours'); hours=initial['hours']; defaults=initial['defaults']
 assert hours['days']==defaults and hours['version']==1
 call('save-hours',hours,status=403,send_csrf=False)
-invalid=[None, [], {}, defaults[:7], defaults+[[]]]
+invalid=[None, [], {}, defaults[:6], defaults+[[]]]
 for value in invalid: call('save-hours',{'days':value,'version':1},status=422)
 for slots in [[['25:00','26:00']], [['11:00','10:00']], [['11:00','11:00']], [['11:00','13:00'],['12:00','14:00']], [['11:00']], [['<script>','22:00']], [['11:00','12:00']]*3, 'closed']:
     days=copy.deepcopy(defaults); days[0]=slots
     call('save-hours',{'days':days,'version':1},status=422)
 assert call('hours')['hours']==hours
-days=copy.deepcopy(defaults); days[0]=[['10:15','14:45']]; days[7]=[]
+days=copy.deepcopy(defaults); days[0]=[['10:15','14:45']]; days[6]=[]
 saved_hours=call('save-hours',{'days':days,'version':1})['hours']
 assert saved_hours['version']==2 and saved_hours['days']==days
 assert call('hours')['hours']==saved_hours
@@ -89,14 +89,30 @@ for route in ['','menu.html','contact.html']:
     html=client.open(base+'/'+route).read().decode()
     assert '10h15 – 14h45' in html and 'data-hours-slot' not in html
     assert html.count('10h15 – 14h45')==(2 if route=='contact.html' else 1)
-    assert '<dt>Jours fériés</dt><dd>Fermé</dd>' in html
+    assert '<dt>Dimanche</dt><dd>Fermé</dd>' in html and 'fériés' not in html
 call('save-hours',hours,status=409)
 assert call('hours')['hours']==saved_hours
 restored=call('save-hours',{'days':defaults,'version':2})['hours']
 assert restored['version']==3 and restored['days']==defaults
 html=client.open(base+'/contact.html').read().decode()
-assert 'Mardi au vendredi' in html and 'Samedi, dimanche et jours fériés' in html
+assert 'Mardi au vendredi' in html and 'Samedi et dimanche' in html
 assert '10h15' not in html
 print('PASS: shared hours defaults, auth, CSRF, invalid shape/time/order/overlap/XSS, persistence, all public slots, conflict and reset')
+casa_initial=call('hours&venue=casa')
+assert casa_initial['defaults']==[[['11:30','14:00']]]*4+[[['11:30','14:00'],['18:30','22:00']],[],[]]
+assert casa_initial['hours']['days']==casa_initial['defaults']
+call('hours&venue=unknown',status=422)
+call('save-hours',{'venue':'unknown','days':defaults,'version':1},status=422)
+pizza_before=call('hours')['hours']
+casa_days=copy.deepcopy(casa_initial['defaults']);casa_days[0]=[['12:15','14:15']]
+casa_saved=call('save-hours',{'venue':'casa','days':casa_days,'version':1})['hours']
+assert casa_saved['version']==2 and call('hours&venue=casa')['hours']==casa_saved
+assert call('hours')['hours']==pizza_before
+assert '12h15 – 14h15' in client.open(base+'/casa.html').read().decode()
+assert '12h15 – 14h15' in client.open(base+'/contact.html').read().decode()
+assert '12h15 – 14h15' not in client.open(base+'/').read().decode()
+call('save-hours',{'venue':'casa','days':casa_days,'version':1},status=409)
+call('save-hours',{'venue':'casa','days':casa_initial['defaults'],'version':2})
+print('PASS: separate Casa/Pizza defaults, saving, independent versions, protected venue selection, public schedules')
 call('logout',{})
 print('PASS: setup once, auth, CSRF, invalid data, upload validation, automatic publication, default image, XSS escaping, updates, conflict, persistence, logout/login, protected deletion, stale version, removal from public site')

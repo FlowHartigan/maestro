@@ -31,3 +31,4 @@ CREATE TABLE IF NOT EXISTS opening_hours (
  version INT UNSIGNED NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 INSERT IGNORE INTO opening_hours (id, schedule) VALUES (1, NULL);
+INSERT IGNORE INTO opening_hours (id, schedule) VALUES (2, NULL);

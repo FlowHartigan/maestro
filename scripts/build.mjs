@@ -18,7 +18,7 @@ for (const directory of ['dist', '.build']) {
 }
 await mkdir(resolve(dist, 'assets'));
 const pizzas = JSON.parse(await readFile('src/pizzas.json', 'utf8'));
-const fixed = ['images/Logos/logo_main.png', 'images/pizzeria/hero-fenati.png', 'images/pizzeria/don-scata-feature.png', 'images/pizzeria/texture.jpg', 'images/pizzeria/title.jpg', 'images/pizzeria/food-pattern.png'];
+const fixed = ['images/Logos/logo_main.png', 'images/pizzeria/hero-fenati.png', 'images/pizzeria/don-scata-feature.png', 'images/pizzeria/texture.jpg', 'images/pizzeria/title.jpg', 'images/pizzeria/food-pattern.png', 'images/casa/hero-lasagnes.png', 'images/casa/menu-du-jour.png'];
 const sources = [...new Set([...fixed, ...pizzas.map(p => p.image)])];
 const manifest = {};
 let originalBytes = 0;
@@ -29,10 +29,10 @@ for (const source of sources) {
   const input = await readFile(source);
   originalBytes += input.length;
   const isPizza = source.startsWith('images/pizza/');
-  const widths = isPizza ? [480, 800] : [source.includes('hero-fenati') ? 1680 : source.includes('don-scata') ? 1000 : source.includes('logo_main') ? 300 : 1400];
+  const widths = isPizza ? [480, 800] : [source.includes('hero-') ? 1680 : source.includes('don-scata') ? 1000 : source.includes('logo_main') ? 300 : 1400];
   const outputs = [];
   for (const width of widths) {
-    const { data, info } = await sharp(input).rotate().resize({ width, withoutEnlargement: true }).webp({ quality: 80, effort: 5 }).toBuffer({ resolveWithObject: true });
+    const { data, info } = await sharp(input).rotate().resize({ width, withoutEnlargement: true }).webp({ quality: source.includes('menu-du-jour') ? 92 : 80, effort: 5 }).toBuffer({ resolveWithObject: true });
     const name = `assets/${basename(source).replace(/\.[^.]+$/, '')}-${info.width}-${hash(data)}.webp`;
     await writeFile(resolve(dist, name), data);
     optimizedBytes += data.length;
@@ -51,9 +51,12 @@ const stylesheet = `assets/styles-${hash(minified)}.css`;
 await writeFile(resolve(dist, stylesheet), minified);
 await build({ configFile: false, publicDir: false, esbuild: { jsx: 'automatic' }, build: { ssr: 'src/entry.jsx', outDir: '.build', emptyOutDir: false, rollupOptions: { output: { entryFileNames: 'entry.mjs' } } } });
 const { render, renderCardTemplate, renderFeatureTemplate } = await import(pathToFileURL(resolve(root, '.build/entry.mjs')).href);
+const casaCSS = (await transformWithEsbuild(await readFile('src/casa.css', 'utf8'), 'casa.css', { loader: 'css', minify: true })).code;
+const casaStylesheet = `assets/casa-${hash(casaCSS)}.css`;
+await writeFile(resolve(dist, casaStylesheet), casaCSS);
 const pageSizes = {};
-for (const page of ['index.html', 'menu.html', 'contact.html']) {
-  const html = render(page, stylesheet);
+for (const page of ['index.html', 'menu.html', 'contact.html', 'casa.html']) {
+  const html = render(page, stylesheet, false, casaStylesheet);
   await writeFile(resolve(dist, page), html);
   pageSizes[page] = { bytes: Buffer.byteLength(html), gzip: gzipSync(html).length };
 }
@@ -64,8 +67,8 @@ console.log(JSON.stringify(report, null, 2));
 // React produces the HTML templates; PHP substitutes escaped database content at request time.
 await mkdir('.build/server/templates', {recursive:true});
 await cp('server', '.build/server', {recursive:true});
-for (const page of ['index.html','menu.html','contact.html']) {
-  await writeFile(`.build/server/templates/${page}`, render(page, stylesheet, true));
+for (const page of ['index.html','menu.html','contact.html','casa.html']) {
+  await writeFile(`.build/server/templates/${page}`, render(page, stylesheet, true, casaStylesheet));
 }
 await writeFile('.build/server/templates/card.html', renderCardTemplate());
 await writeFile('.build/server/templates/feature.html', renderFeatureTemplate());

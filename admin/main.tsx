@@ -22,6 +22,7 @@ async function request(action: string, body?: FormData | object, csrf?: string) 
 }
 
 function App() {
+  const [hoursVenue, setHoursVenue] = useState<'pizza' | 'casa'>('pizza');
   const [section, setSection] = useState<'pizzas' | 'hours'>('pizzas');
   const [session, setSession] = useState<Session | null>(null);
   const [items, setItems] = useState<Pizza[]>([]);
@@ -99,7 +100,10 @@ function App() {
         if (key === section || (dirty && !window.confirm('Abandonner les modifications non enregistrées ?'))) return;
         setDirty(false); setError(''); setNotice(''); setSection(key);
       }}>{label}</button>)}</nav>
-      {section === 'hours' ? <HoursEditor csrf={session.csrf} request={request} onDirty={setDirty} onBusy={setSaving} /> : <>
+      {section === 'hours' ? <>
+        <nav className="admin-sections venue-sections" aria-label="Établissement des horaires">{([['pizza', 'Pizza Maestro · Clermont-Ferrand'], ['casa', 'La Casa di Maestro · Beaumont']] as const).map(([value, label]) => <button key={value} disabled={saving} aria-pressed={hoursVenue === value} onClick={() => { if (hoursVenue !== value && (!dirty || window.confirm('Abandonner les modifications non enregistrées ?'))) { setDirty(false); setHoursVenue(value); } }}>{label}</button>)}</nav>
+        <HoursEditor key={hoursVenue} venue={hoursVenue} csrf={session.csrf} request={request} onDirty={setDirty} onBusy={setSaving} />
+      </> : <>
 
       <div className="page-heading"><div><h1>Vos pizzas</h1><p>{items.length} recettes</p></div><button className="primary" onClick={() => choose(blank)}>+ Ajouter une pizza</button></div>
       {error && <p role="alert" className="error">{error} <button onClick={load}>Réessayer</button></p>}

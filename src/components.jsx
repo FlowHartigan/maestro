@@ -31,11 +31,11 @@ export function Footer({ dynamic = false }) {
 <a className="brand" href="index.html">
 <img src={media("images/Logos/logo_main.png")} alt="Pizza Maestro" width="150" height="65" />
 </a>
-<p>Pizzas artisanales à Clermont-Ferrand<br />et à Chamalières.</p>
+<p>Pizzas artisanales à Clermont-Ferrand.<br /><a href="casa.html">La Casa di Maestro à Beaumont.</a></p>
 <a href="https://www.facebook.com/PizzaMaestroClf/">Suivez-nous sur Facebook</a>
 </div>
 <div>
-<h2>Horaires</h2>
+<h2>Horaires · Clermont-Ferrand</h2>
 <Hours dynamic={dynamic} />
 </div>
 <div>
@@ -46,7 +46,7 @@ export function Footer({ dynamic = false }) {
 <a href="contact.html">Nos deux adresses</a>
 </div>
 </div>
-<p className="copyright">Pizza Maestro · Clermont-Ferrand &amp; Chamalières</p>
+<p className="copyright">Pizza Maestro · Clermont-Ferrand</p>
 </footer>
   );
 }
@@ -64,12 +64,12 @@ export function Locations() {
 </div>
 </article>
 <article className="location">
-<h3>Chamalières</h3>
-<p>68 avenue Joseph Claussat</p>
-<a className="phone" href="tel:+33473373502">04 73 37 35 02</a>
+<h3>La Casa di Maestro</h3>
+<p>Restaurant italien à Beaumont<br />1 rue Barbier d’Aubrée · 63110 Beaumont</p>
+<a className="phone" href="tel:+33984674949">09 84 67 49 49</a>
 <div className="location-links">
-<a href="https://goo.gl/maps/GnQrDi7orxPQc2Y46">Itinéraire</a>
-<a href="https://deliveroo.fr/fr/menu/clermont-ferrand/chamalieres/pizza-maestro-chamalieres">Commander sur Deliveroo</a>
+<a href="https://www.google.com/maps/search/?api=1&amp;query=1%20rue%20Barbier%20d%27Aubr%C3%A9e%2063110%20Beaumont">Itinéraire</a>
+<a href="casa.html">Découvrir le restaurant</a>
 </div>
 </article>
 </div>
@@ -99,8 +99,9 @@ export function DonScata({ dynamic = false, template = false }) {
   );
 }
 
-export function Hours({ dynamic = false }) {
-  if (dynamic) return <div data-hours-slot="shared" />;
+export function Hours({ dynamic = false, venue = 'pizza' }) {
+  if (dynamic) return <div data-hours-slot={venue} />;
+  if (venue === 'casa') return <dl className="hours"><div><dt>Lundi au jeudi</dt><dd>11h30 – 14h</dd></div><div><dt>Vendredi</dt><dd>11h30 – 14h<br />18h30 – 22h</dd></div><div><dt>Samedi et dimanche</dt><dd>Fermé</dd></div></dl>;
   return (<dl className="hours">
 <div>
 <dt>Lundi</dt>
@@ -111,8 +112,12 @@ export function Hours({ dynamic = false }) {
 <dd>11h – 13h30<br />17h30 – 22h</dd>
 </div>
 <div>
-<dt>Samedi, dimanche et jours fériés</dt>
+<dt>Samedi et dimanche</dt>
 <dd>17h30 – 22h</dd>
 </div>
 </dl>);
+}
+
+export function UniverseSwitch({ casa = false }) {
+  return <nav className="universe-switch" aria-label="Choisir votre établissement"><span>Deux adresses, deux envies.</span><div><a href="index.html" aria-current={!casa ? 'page' : undefined}><strong>Pizza Maestro</strong><small>Clermont-Ferrand</small></a><a href="casa.html" aria-current={casa ? 'page' : undefined}><strong>La Casa di Maestro</strong><small>Restaurant italien · Beaumont</small></a></div></nav>;
 }

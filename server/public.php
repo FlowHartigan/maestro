@@ -12,10 +12,13 @@ function replacements(array $pizza): array {
 }
 try {
     $name = basename(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
-    $page = in_array($name, ['menu.html', 'contact.html'], true) ? $name : 'index.html';
+    $page = in_array($name, ['menu.html', 'contact.html', 'casa.html'], true) ? $name : 'index.html';
     $html = file_get_contents(__DIR__ . '/templates/' . $page);
-    $html = str_replace('<div data-hours-slot="shared"></div>', hoursHTML(openingHours()['days']), $html);
-    if ($page === 'contact.html') { echo $html; exit; }
+    foreach (['pizza', 'casa'] as $venue) {
+        $slot = '<div data-hours-slot="' . $venue . '"></div>';
+        if (str_contains($html, $slot)) $html = str_replace($slot, hoursHTML(openingHours($venue)['days']), $html);
+    }
+    if (in_array($page, ['contact.html', 'casa.html'], true)) { echo $html; exit; }
     $pizzas = allPizzas(true);
     $card = file_get_contents(__DIR__ . '/templates/card.html');
     $render = fn(array $list): string => '<div class="pizza-grid">' . implode('', array_map(fn($pizza) => strtr($card, replacements($pizza)), $list)) . '</div>';

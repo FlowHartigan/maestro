@@ -12,7 +12,7 @@ try {
         respond(['user' => user(), 'csrf' => $_SESSION['csrf'], 'defaultImage' => defaultPhoto(), 'setupRequired' => (bool)query('SELECT setup_hash IS NOT NULL FROM app_settings WHERE id = 1')->fetchColumn()]);
     }
     if ($method === 'GET' && $action === 'pizzas') { requireUser(); respond(['pizzas' => allPizzas()]); }
-    if ($method === 'GET' && $action === 'hours') { requireUser(); respond(['hours' => openingHours(), 'defaults' => defaultHours()]); }
+    if ($method === 'GET' && $action === 'hours') { requireUser(); $venue = hoursVenue($_GET['venue'] ?? 'pizza'); respond(['hours' => openingHours($venue), 'defaults' => defaultHours($venue)]); }
     if ($method !== 'POST') fail('Méthode non autorisée.', 405);
     csrf();
     $data = str_contains($_SERVER['CONTENT_TYPE'] ?? '', 'application/json') ? json_decode(file_get_contents('php://input'), true, 512, JSON_THROW_ON_ERROR) : $_POST;
@@ -44,11 +44,12 @@ try {
     requireUser();
     if ($action === 'logout') { $_SESSION = []; session_destroy(); respond(['ok' => true]); }
     if ($action === 'save-hours') {
+        $venue = hoursVenue($data['venue'] ?? 'pizza');
         try { $days = validateHours($data['days'] ?? null); }
         catch (InvalidArgumentException $e) { fail($e->getMessage(), 422); }
         $version = filter_var($data['version'] ?? null, FILTER_VALIDATE_INT);
         if (!$version || $version < 1) fail('Version des horaires invalide. Rechargez la rubrique.', 422);
-        $statement = query('UPDATE opening_hours SET schedule = ?, version = version + 1 WHERE id = 1 AND version = ?', [json_encode($days, JSON_THROW_ON_ERROR), $version]);
+        $statement = query('UPDATE opening_hours SET schedule = ?, version = version + 1 WHERE id = ? AND version = ?', [json_encode($days, JSON_THROW_ON_ERROR), $venue === 'casa' ? 2 : 1, $version]);
         if ($statement->rowCount() !== 1) fail('Les horaires ont été modifiés ailleurs. Rechargez la rubrique avant de réessayer.', 409);
         respond(['hours' => ['days' => $days, 'version' => $version + 1]]);
     }

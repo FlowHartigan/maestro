@@ -8,7 +8,7 @@ export default function Home({ dynamic = false }) {
 <section className="hero">
 <div className="hero-copy">
 <h1>À partager.<br />À savourer.</h1>
-<p>Les pizzas artisanales de Maestro,<br />à Clermont-Ferrand et Chamalières.</p>
+<p>Les pizzas artisanales de Maestro,<br />à Clermont-Ferrand.</p>
 <a className="button outline" href="menu.html">Découvrez nos pizzas</a>
 </div>
 </section>

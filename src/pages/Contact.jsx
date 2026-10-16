@@ -5,18 +5,21 @@ export default function Contact({ dynamic = false }) {
 
 <section className="page-title">
 <h1>On vous attend !</h1>
-<p>Deux adresses, la même passion.</p>
+<p>Une pizzeria à Clermont-Ferrand, un restaurant italien à Beaumont.</p>
 </section>
 <section className="section container">
-<h2>Votre pizzeria Maestro</h2>
+<h2>Nos deux établissements</h2>
 <Locations />
 <div className="contact-bottom">
 <section>
-<h2>À quelle heure ?</h2>
+<h2>Pizza Maestro · Clermont-Ferrand</h2>
 <Hours dynamic={dynamic} />
 </section>
 <section>
-<h2>Une question ?</h2>
+<h2>La Casa di Maestro · Beaumont</h2>
+<Hours dynamic={dynamic} venue="casa" />
+<a className="contact-casa-link" href="casa.html">Découvrir le restaurant et son menu du jour</a>
+<h3>Une question ?</h3>
 <p>Écrivez-nous ou appelez directement votre pizzeria.</p>
 <a href="mailto:pizza.maestro@yahoo.com">pizza.maestro@yahoo.com</a>
 <p>
