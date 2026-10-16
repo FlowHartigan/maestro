@@ -116,3 +116,9 @@ Release active : default-20261016-211852. Les nouvelles pizzas sans photo utilis
 ## Publication automatique — 16 octobre 2026
 
 Release active : auto-20261016-212326. Case de visibilité retirée ; chaque futur enregistrement impose published=1 côté API. Aucun changement des recettes existantes ni de leur visibilité au déploiement. Cache PHP actualisé par rechargement gracieux. Tests typecheck/build/5 tests et parcours API isolé réussis, y compris sans champ published et avec ancien client envoyant 0. Carte publique et mariage identiques avant/après.
+
+## Horaires administrables — 16 octobre 2026
+
+Release active : hours-20261016-213754, révision applicative 40edb11. Sauvegarde de la base, des médias et du lien précédent dans /var/backups/maestro/hours-20261016-213754. Migration additive server/migrations/001-opening-hours.sql appliquée : table opening_hours, valeurs historiques par défaut, aucun changement des pizzas ou comptes. Aucune modification de Nginx ni des services mariage. Rechargement gracieux des workers PHP après bascule.
+
+Vérifications réalisées : typecheck, build et six tests de build réussis ; syntaxe PHP 8.4 et parcours API complet sur base MySQL 5.7 isolée. Horaires : authentification, CSRF, formats invalides, chevauchement, ordre, persistance, conflits et restauration des valeurs par défaut. Migration rejouée sans perte des réglages. Formulaire testé dans le navigateur : sauvegarde puis rechargement, erreur et focus, annulation, confirmation de réinitialisation, clavier. Affichage à 390/768/1280 px sans débordement horizontal mesuré ; aucune erreur ni alerte console. Après publication : trois pages publiques strictement identiques à avant, nouveau bundle admin servi, API horaires privée 401 sans connexion, images de la carte accessibles, accueil mariage identique et API mariage saine. Aucun test de modification sur la base réelle et aucun déploiement IONOS.

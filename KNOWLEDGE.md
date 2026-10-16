@@ -144,3 +144,10 @@ Mémoire du projet créée le 16 octobre 2026. Lire ce fichier avant toute inter
 - Conséquence : ancienne réponse API servie par le cache des chemins ; contrôle de publication refusé et rollback automatique.
 - Correction : rechargement gracieux de PHP-FPM (USR2), puis contrôle avec quelques tentatives bornées.
 - Prévention : après bascule atomique PHP, renouveler les workers et vérifier une propriété de la nouvelle version de l’API.
+
+### 2026-10-16 — Champs horaires et confirmations dans le navigateur intégré
+
+- Erreur : utiliser fill pour un champ time et supposer que sa valeur visible avait déclenché la modification React ; utiliser un clic Playwright sur une confirmation native bloquait aussi la commande.
+- Conséquence : bouton de sauvegarde encore désactivé malgré une valeur affichée modifiée, et délai d’attente sur le dialogue.
+- Correction : saisie native setValue avec les indices de la dernière observation, puis vérification du statut « Non enregistré » ; validation du dialogue natif avec la touche Entrée. Sauvegarde et rechargement ensuite vérifiés.
+- Prévention : vérifier l’état applicatif après saisie automatisée d’une heure ; distinguer un changement DOM d’une modification prise en compte, puis confirmer la persistance. Traiter les confirmations natives par les commandes natives disponibles.

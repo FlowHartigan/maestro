@@ -8,7 +8,7 @@ Mis à jour le 16 octobre 2026. Lire ce fichier en premier dans un nouveau chat,
 - Dépôt de référence : F:\Flo\_AI\Projets\maestro.
 - GitHub : https://github.com/FlowHartigan/maestro ; branche de travail et de publication v2.
 - v1 et tag v1.0.0 conservent le site initial. Ne pas les modifier. Ne pas intégrer dans main sans demande.
-- Dernier commit applicatif : 8ee68a4, retrait de la case de visibilité. Le commit ajoutant ce point de reprise ne modifie pas le site.
+- Dernier commit applicatif : 40edb11, gestion des horaires partagés dans l’administration. Le commit ajoutant ce point de reprise ne modifie pas le site.
 - État Git avant ce document : propre, v2 synchronisée avec origin/v2.
 - Le dossier C:\Users\flori\Documents\ChatGPT\maestro 2 est un espace de préparation, pas le dépôt Git de référence. Il contient des scripts temporaires et aperçus ; ne pas les exécuter aveuglément, certains supposent une base vide ou une release précise.
 
@@ -31,6 +31,16 @@ Le même code doit fonctionner sur le VPS Ubuntu et un mutualisé IONOS avec PHP
 - Pas de gestion de news livrée pour le moment. Pas de récupération de mot de passe par email. Ne pas inventer d'autres fonctionnalités ou tâches en attente.
 - Premier compte : code privé à usage unique, puis identifiant et mot de passe choisis par le propriétaire. Ne pas supposer si l'activation a été faite depuis ; inspecter la session si nécessaire sans modifier les comptes.
 
+## Horaires administrables — ajout du 16 octobre 2026
+
+- Rubrique « Horaires » à côté de « Pizzas », après connexion. Horaires communs aux deux établissements, partagés en MySQL et visibles immédiatement sur tout le site.
+- Sept jours et jours fériés, fermeture ou un/deux créneaux par jour, sans chevauchement ni passage de minuit. Jour férié prioritaire sur le jour hebdomadaire. Valeurs historiques conservées à la livraison.
+- Sauvegarde protégée par session, CSRF et version ; avertissement de départ si modifications non enregistrées, annulation et retour confirmé aux horaires d’origine (à enregistrer pour appliquer).
+- server/hours.php : validation, stockage et rendu ; server/hours-defaults.json : valeurs initiales ; admin/HoursEditor.tsx : formulaire ; composant Hours et slots publics.
+- Installation existante : migration additive réexécutable server/migrations/001-opening-hours.sql avant le code. Inclus dans schema.sql pour une nouvelle installation. Ne pas remplacer un horaire enregistré par les valeurs initiales.
+- Typecheck/build/6 tests et API isolée PHP 8.4/MySQL 5.7 réussis. UI vérifiée avec sauvegarde/rechargement, saisie invalide, annulation/réinitialisation, clavier et 390/768/1280 px, sans débordement mesuré ni erreur console. Après publication : pages publiques identiques avant/après, API privée 401, bundle et photos servis, mariage inchangé et sain.
+- Environnement temporaire de cette intervention : maestro-hours-integration, base maestro_hours_integration et /var/www/maestro/hours-integration ; supprimés après vérifications. Aucun compte de test ajouté à la base réelle.
+
 ## Front et design
 
 Le propriétaire a choisi le template Pizzeria TemplateMonster #78480. Voir TEMPLATE.md pour la provenance et le périmètre. L'identité sombre/or et les contenus Maestro ont été conservés. Accueil avec hero Fenati régénéré, section « La passion de la pizza, tout simplement. », puis bandeau orange Don Scata avec photo détourée générée.
@@ -48,7 +58,7 @@ Toutes les pages publiques sont écrites en React JSX, compilées par Vite et pr
 
 ## Backend et sécurité
 
-PHP 8.4, PDO préparé sans émulation, MySQL 5.7. Tables administrators, app_settings, login_attempts, pizzas. Compte applicatif limité à SELECT/INSERT/UPDATE/DELETE. Sessions serveur ; mot de passe haché ; cookies Secure/HttpOnly/SameSite Strict, chemin /maestro/ ; CSRF et limitation des tentatives ; conflits de modifications rejetés avec 409.
+PHP 8.4, PDO préparé sans émulation, MySQL 5.7. Tables administrators, app_settings, login_attempts, pizzas et opening_hours. Compte applicatif limité à SELECT/INSERT/UPDATE/DELETE. Sessions serveur ; mot de passe haché ; cookies Secure/HttpOnly/SameSite Strict, chemin /maestro/ ; CSRF et limitation des tentatives ; conflits de modifications rejetés avec 409.
 
 Photos JPG/PNG/WebP, maximum 6 Mo et 24 mégapixels, validation serveur et réencodage WebP maximum 1200 px. Noms aléatoires de 40 caractères hexadécimaux. Aucun mot de passe/token/config réelle à versionner ou afficher.
 
@@ -57,7 +67,7 @@ Photos JPG/PNG/WebP, maximum 6 Mo et 24 mégapixels, validation serveur et réen
 - VPS : vps-328a8329.vps.ovh.ca, Ubuntu. SSH utilisateur ubuntu ; clé locale C:\Users\flori\.ssh\festi-app-vps. Utiliser IdentitiesOnly=yes, BatchMode=yes, StrictHostKeyChecking=yes ; sudo -n disponible. Ne pas lire ni copier le contenu de la clé.
 - Site mariage à la racine dms-app.fr : à préserver. API mariage /api/ proxifiée vers 127.0.0.1:3001 ; contrôle http://127.0.0.1:3001/api/health. Ne toucher qu'au périmètre Maestro.
 - Nginx : /etc/nginx/sites-available/festi-app, bloc BEGIN/END MAESTRO PREVIEW. Configuration versionnée deploy/nginx-maestro-location.conf. Pages .html et API Maestro traitées par PHP ; autres PHP et fichiers privés non exposés.
-- Release active après dernière intervention : /var/www/maestro/releases/auto-20261016-212326 ; lien /var/www/maestro/current. REVISION : 8ee68a4. Revalider l'état réel avant toute modification.
+- Release active après dernière intervention : /var/www/maestro/releases/hours-20261016-213754 ; lien /var/www/maestro/current. REVISION : 40edb11. Revalider l'état réel avant toute modification.
 - Une release comprend public/ (dist/) et server/ (.build/server/) hors racine publique. config.local.json est un lien vers shared/config.json.
 - Persistance : /var/www/maestro/shared/config.json (root:www-data 0640), shared/uploads. Ne pas supprimer shared ni remplacer la base lors d'une mise à jour.
 - MySQL : conteneur maestro-mysql57, MySQL 5.7.44, réseau maestro-test, aucun port publié ; base maestro_test, utilisateur maestro_app. Secrets privés serveur. Les secrets ne sont pas dans ce document.
@@ -68,7 +78,7 @@ Photos JPG/PNG/WebP, maximum 6 Mo et 24 mégapixels, validation serveur et réen
 
 ## Vérifications réalisées
 
-Dernière version : typecheck, build, 5 tests de build réussis. Tests API en environnement isolé sur MySQL 5.7/PHP 8.4 : activation unique, session, CSRF, validation, photo par défaut et photos personnalisées, publication automatique, XSS échappé, persistance, conflits, suppression protégée, déconnexion/reconnexion. UI d'administration vérifiée précédemment sur ordinateur et visuellement à 390/768 px. Publication : bundle sans case de visibilité, carte publique et accueil mariage identiques avant/après, santé API mariage OK.
+Dernière version : typecheck, build, 6 tests de build réussis. Tests API en environnement isolé sur MySQL 5.7/PHP 8.4 : activation unique, session, CSRF, validation, photo par défaut et photos personnalisées, publication automatique, XSS échappé, persistance, conflits, suppression protégée, déconnexion/reconnexion. UI d'administration vérifiée précédemment sur ordinateur et visuellement à 390/768 px. Publication : bundle sans case de visibilité, carte publique et accueil mariage identiques avant/après, santé API mariage OK.
 
 L'environnement de test maestro-admin-integration et la base maestro_admin_integration ont été supprimés après les contrôles ; aucun compte de test n'a été ajouté à la base réelle. scripts/integration.py crée et supprime des recettes : l'exécuter uniquement contre une nouvelle base privée isolée, jamais maestro_test ni IONOS réel.
 
@@ -87,6 +97,6 @@ Selon l'environnement du nouveau chat, les commandes peuvent nécessiter un chem
 
 ## Reprise attendue
 
-Aucune implémentation en cours. Les dernières demandes sont livrées sur le VPS et GitHub v2. Attendre la prochaine demande métier. Les possibilités mentionnées mais non réalisées sont les news et le test/déploiement IONOS ; ne pas les lancer sans demande. Ne pas confondre les textes historiques de VPS.md/ARCHITECTURE.md avec leur dernier état daté.
+Aucune implémentation en cours. La gestion des horaires est livrée sur le VPS et enregistrée localement sur v2. Les deux derniers commits restent locaux : le contrôle automatique a refusé leur envoi sur GitHub faute d’autorisation explicite dans ce chat. Attendre cet accord avant de pousser. Les livraisons précédentes sont sur GitHub v2. Attendre la prochaine demande métier. Les possibilités mentionnées mais non réalisées sont les news et le test/déploiement IONOS ; ne pas les lancer sans demande. Ne pas confondre les textes historiques de VPS.md/ARCHITECTURE.md avec leur dernier état daté.
 
 Les aperçus et le fichier privé d'activation initial sont dans l'espace local de préparation, hors Git ; ne jamais recopier leurs secrets dans un compte rendu ou un commit. Lire KNOWLEDGE.md avant d'agir : chemins absolus, GD WebP réel, base Vite ./, cache PHP après bascule et contrôles après rechargement.
