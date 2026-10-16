@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState, type FormEvent } from 'react';
 import { createRoot } from 'react-dom/client';
 import './style.css';
+import HoursEditor from './HoursEditor';
 
 type Pizza = { id: number; name: string; ingredients: string; price26: string; price33: string; price40: string; image: string; published: number; version: number };
 type Session = { user: { username: string } | null; csrf: string; setupRequired?: boolean; defaultImage?: string };
@@ -21,6 +22,7 @@ async function request(action: string, body?: FormData | object, csrf?: string) 
 }
 
 function App() {
+  const [section, setSection] = useState<'pizzas' | 'hours'>('pizzas');
   const [session, setSession] = useState<Session | null>(null);
   const [items, setItems] = useState<Pizza[]>([]);
   const [selected, setSelected] = useState<Pizza | null>(null);
@@ -68,7 +70,7 @@ function App() {
     setError('');
     try {
       await request('logout', {}, session?.csrf);
-      setSelected(null); setDirty(false); setItems([]);
+      setSelected(null); setDirty(false); setItems([]); setSection('pizzas');
       setSession(await request('session'));
     } catch (e) { setError((e as Error).message); }
   }
@@ -77,7 +79,7 @@ function App() {
   if (!session.user) return <main className="login">
     <a className="back" href="../">← Retour au site</a>
     <div className="login-panel"><p className="brand">Maestro</p><h1>{session.setupRequired ? 'Votre espace commence ici' : 'Administration'}</h1>
-      <p>{session.setupRequired ? 'Activez le premier compte avec le code privé fourni à la livraison.' : 'Connectez-vous pour gérer votre carte.'}</p>
+      <p>{session.setupRequired ? 'Activez le premier compte avec le code privé fourni à la livraison.' : 'Connectez-vous pour gérer votre carte et vos horaires.'}</p>
       <form onSubmit={login}>
         {session.setupRequired && <label>Code d’activation<input name="token" required autoComplete="off" spellCheck={false} /></label>}
         <label>Identifiant<input name="username" required autoComplete="username" minLength={session.setupRequired ? 3 : undefined} maxLength={50} spellCheck={false} /></label>
@@ -93,6 +95,12 @@ function App() {
   return <>
     <header className="topbar"><a className="brand" href="../">Maestro</a><span>Administration</span><div className="top-actions"><a href="../menu.html" target="_blank" rel="noreferrer">Voir la carte ↗</a><button onClick={logout}>Se déconnecter</button></div></header>
     <main className="workspace">
+      <nav className="admin-sections" aria-label="Rubriques de l’administration">{([['pizzas', 'Pizzas'], ['hours', 'Horaires']] as const).map(([key, label]) => <button key={key} aria-current={section === key ? 'page' : undefined} disabled={saving} onClick={() => {
+        if (key === section || (dirty && !window.confirm('Abandonner les modifications non enregistrées ?'))) return;
+        setDirty(false); setError(''); setNotice(''); setSection(key);
+      }}>{label}</button>)}</nav>
+      {section === 'hours' ? <HoursEditor csrf={session.csrf} request={request} onDirty={setDirty} onBusy={setSaving} /> : <>
+
       <div className="page-heading"><div><h1>Vos pizzas</h1><p>{items.length} recettes</p></div><button className="primary" onClick={() => choose(blank)}>+ Ajouter une pizza</button></div>
       {error && <p role="alert" className="error">{error} <button onClick={load}>Réessayer</button></p>}
       {notice && <p role="status" className="success">{notice}</p>}
@@ -104,6 +112,7 @@ function App() {
         </section>
         {selected ? <Editor key={`${selected.id}-${selected.version}`} pizza={selected} csrf={session.csrf} onBusy={setSaving} onDeleted={id => { setItems(prev => prev.filter(p => Number(p.id) !== id)); setSelected(null); setDirty(false); setNotice("Pizza supprimée. Elle a été retirée de la carte du site."); }} onDirty={setDirty} onSaved={p => { setItems(prev => prev.some(i => Number(i.id) === Number(p.id)) ? prev.map(i => Number(i.id) === Number(p.id) ? p : i) : [...prev, p]); setSelected(p); setDirty(false); setNotice('Pizza enregistrée. La carte du site est à jour.'); }} onCancel={() => { if (!dirty || window.confirm('Annuler les modifications de cette fiche ?')) { setSelected(null); setDirty(false); } }} /> : <section className="empty-editor"><span aria-hidden="true">✦</span><h2>Composez votre carte</h2><p>Choisissez une pizza pour la modifier ou ajoutez une nouvelle recette.</p><button onClick={() => choose(blank)}>Ajouter une pizza</button></section>}
       </div>
+      </>}
     </main>
   </>;
 }

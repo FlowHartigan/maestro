@@ -23,7 +23,7 @@ export function PizzaGrid({ pizzas, slot }) {
   return <div className="pizza-grid">{pizzas.map(pizza => <PizzaCard key={pizza.name} pizza={pizza} />)}</div>;
 }
 
-export function Footer() {
+export function Footer({ dynamic = false }) {
   return (
 <footer>
 <div className="container footer-grid">
@@ -36,20 +36,7 @@ export function Footer() {
 </div>
 <div>
 <h2>Horaires</h2>
-<dl className="hours">
-<div>
-<dt>Lundi</dt>
-<dd>Fermé</dd>
-</div>
-<div>
-<dt>Mardi au vendredi</dt>
-<dd>11h – 13h30<br />17h30 – 22h</dd>
-</div>
-<div>
-<dt>Samedi, dimanche et jours fériés</dt>
-<dd>17h30 – 22h</dd>
-</div>
-</dl>
+<Hours dynamic={dynamic} />
 </div>
 <div>
 <h2>À votre écoute</h2>
@@ -110,4 +97,22 @@ export function DonScata({ dynamic = false, template = false }) {
 </section>
 
   );
+}
+
+export function Hours({ dynamic = false }) {
+  if (dynamic) return <div data-hours-slot="shared" />;
+  return (<dl className="hours">
+<div>
+<dt>Lundi</dt>
+<dd>Fermé</dd>
+</div>
+<div>
+<dt>Mardi au vendredi</dt>
+<dd>11h – 13h30<br />17h30 – 22h</dd>
+</div>
+<div>
+<dt>Samedi, dimanche et jours fériés</dt>
+<dd>17h30 – 22h</dd>
+</div>
+</dl>);
 }

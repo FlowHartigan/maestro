@@ -169,3 +169,11 @@ Les nouvelles pizzas sans photo reçoivent le visuel Maestro pizza_off.jpg (celu
 ## Publication automatique — 16 octobre 2026
 
 À la demande du propriétaire, suppression du contrôle « Afficher sur la carte » et du mode brouillon. Toutes les pizzas enregistrées sont visibles sur le site ; l'API impose published=1 même si un ancien client envoie 0 ou omet le champ. Les anciens brouillons conservent leur visibilité lors du déploiement et deviennent publics seulement lorsqu'ils sont enregistrés à nouveau. Aucune mise à jour globale de visibilité. Le champ SQL est conservé pour compatibilité, sans migration de schéma. Cette décision remplace les indications précédentes sur les brouillons.
+
+## Modification des horaires — 16 octobre 2026
+
+La rubrique « Horaires » de l’administration gère les horaires communs aux deux établissements : lundi à dimanche et jours fériés, fermeture ou un à deux créneaux par jour. Les jours fériés remplacent l’horaire hebdomadaire. Les créneaux doivent se suivre sans chevauchement et se terminer le même jour après leur début.
+
+Les horaires sont partagés entre visiteurs et appareils, stockés en MySQL dans opening_hours ; session, CSRF, validation serveur et contrôle de version protègent leur modification. Enregistrer les applique immédiatement au pied de page des trois pages et au bloc contact, sans rebuild. Les jours successifs identiques sont regroupés à l’affichage. L’annulation restaure la dernière lecture ; le retour aux horaires d’origine, confirmé, prépare le formulaire et nécessite un enregistrement pour remplacer les valeurs publiées. Les changements non enregistrés sont signalés et protégés au départ.
+
+Installation existante : appliquer server/migrations/001-opening-hours.sql avec un compte de migration avant le nouveau code. Migration additive et réexécutable, sans changement des recettes, comptes ou réglages existants. Nouvelle installation : inclus dans schema.sql. Le compte applicatif doit disposer des droits SELECT/INSERT/UPDATE/DELETE sur la nouvelle table. Aucun horaire enregistré n’est remplacé par une mise à jour du code.

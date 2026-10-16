@@ -40,3 +40,11 @@ Ouvrir la fiche puis cliquer « Supprimer la pizza ». La confirmation affiche s
 Une nouvelle pizza reçoit automatiquement le visuel Maestro utilisé pour la Rossi. Ajouter une photo reste facultatif et remplace ce visuel. Modifier une recette sans choisir de fichier conserve sa photo actuelle. Lors du déploiement, copier également le contenu de dist/uploads/ vers le dossier uploads persistant sans effacer les photos existantes ; server/default-photo.json contient son chemin public.
 
 La case de visibilité et le mode brouillon ont été retirés. Chaque enregistrement publie la recette. Les anciens brouillons conservent leur état jusqu’à leur prochain enregistrement.
+
+## Modification des horaires — 16 octobre 2026
+
+La rubrique « Horaires » de l’administration gère les horaires communs aux deux établissements : lundi à dimanche et jours fériés, fermeture ou un à deux créneaux par jour. Les jours fériés remplacent l’horaire hebdomadaire. Les créneaux doivent se suivre sans chevauchement et se terminer le même jour après leur début.
+
+Les horaires sont partagés entre visiteurs et appareils, stockés en MySQL dans opening_hours ; session, CSRF, validation serveur et contrôle de version protègent leur modification. Enregistrer les applique immédiatement au pied de page des trois pages et au bloc contact, sans rebuild. Les jours successifs identiques sont regroupés à l’affichage. L’annulation restaure la dernière lecture ; le retour aux horaires d’origine, confirmé, prépare le formulaire et nécessite un enregistrement pour remplacer les valeurs publiées. Les changements non enregistrés sont signalés et protégés au départ.
+
+Installation existante : appliquer server/migrations/001-opening-hours.sql avec un compte de migration avant le nouveau code. Migration additive et réexécutable, sans changement des recettes, comptes ou réglages existants. Nouvelle installation : inclus dans schema.sql. Le compte applicatif doit disposer des droits SELECT/INSERT/UPDATE/DELETE sur la nouvelle table. Aucun horaire enregistré n’est remplacé par une mise à jour du code.

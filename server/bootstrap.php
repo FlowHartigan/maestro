@@ -85,3 +85,5 @@ function defaultPhoto(): string {
 function allPizzas(bool $publishedOnly = false): array {
     return query('SELECT id, name, ingredients, price26, price33, price40, image, published, version FROM pizzas' . ($publishedOnly ? ' WHERE published = 1' : '') . ' ORDER BY sort_order, id')->fetchAll();
 }
+
+require_once __DIR__ . '/hours.php';

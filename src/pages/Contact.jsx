@@ -1,6 +1,6 @@
-import { Locations } from '../components.jsx';
+import { Locations, Hours } from '../components.jsx';
 
-export default function Contact() {
+export default function Contact({ dynamic = false }) {
   return <>
 
 <section className="page-title">
@@ -13,20 +13,7 @@ export default function Contact() {
 <div className="contact-bottom">
 <section>
 <h2>À quelle heure ?</h2>
-<dl className="hours">
-<div>
-<dt>Lundi</dt>
-<dd>Fermé</dd>
-</div>
-<div>
-<dt>Mardi au vendredi</dt>
-<dd>11h – 13h30<br />17h30 – 22h</dd>
-</div>
-<div>
-<dt>Samedi, dimanche et jours fériés</dt>
-<dd>17h30 – 22h</dd>
-</div>
-</dl>
+<Hours dynamic={dynamic} />
 </section>
 <section>
 <h2>Une question ?</h2>

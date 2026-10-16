@@ -14,6 +14,7 @@ try {
     $name = basename(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
     $page = in_array($name, ['menu.html', 'contact.html'], true) ? $name : 'index.html';
     $html = file_get_contents(__DIR__ . '/templates/' . $page);
+    $html = str_replace('<div data-hours-slot="shared"></div>', hoursHTML(openingHours()['days']), $html);
     if ($page === 'contact.html') { echo $html; exit; }
     $pizzas = allPizzas(true);
     $card = file_get_contents(__DIR__ . '/templates/card.html');

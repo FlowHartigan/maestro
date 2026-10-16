@@ -30,7 +30,7 @@ export function render(page, stylesheet, dynamic = false) {
       <a className="skip-link" href="#contenu">Aller au contenu</a>
       <Header page={page} />
       <main id="contenu"><Page dynamic={dynamic} /></main>
-      <Footer />
+      <Footer dynamic={dynamic} />
     </body>
   </html>);
 }

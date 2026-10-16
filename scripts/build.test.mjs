@@ -73,3 +73,14 @@ test('admin assets are local and private templates stay outside public root', as
   assert.ok(!(await readdir(dist)).includes('server'));
   assert.ok(!(await readdir(dist)).includes('config.local.json'));
 });
+
+test('shared opening hours have dynamic slots on every public page', async () => {
+  for (const page of ['index.html', 'menu.html', 'contact.html']) {
+    const html = await readFile(resolve(root, '.build/server/templates', page), 'utf8');
+    assert.equal((html.match(/data-hours-slot="shared"/g) || []).length, page === 'contact.html' ? 2 : 1);
+    assert.ok(!html.includes('<dt>Lundi</dt>'));
+  }
+  const defaults = JSON.parse(await readFile(resolve(root, 'server/hours-defaults.json'), 'utf8'));
+  assert.equal(defaults.length, 8);
+  assert.deepEqual(defaults[0], []);
+});
