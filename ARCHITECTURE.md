@@ -27,6 +27,29 @@ Le contenu principal des pages publiques doit être présent dans le HTML envoy�
 
 Vite produit les fichiers JavaScript et CSS à transférer chez IONOS. Node.js sert au développement et à la compilation, sans service Node.js sur le mutualisé.
 
+## Deux environnements : VPS de test et mutualisé IONOS
+
+Décision validée le 16 octobre 2026 : publier d’abord sur le VPS du propriétaire pour tester, tout en conservant la compatibilité avec le mutualisé IONOS. Les caractéristiques et accès du VPS restent à fournir ; aucun déploiement n’est encore réalisé.
+
+- Conserver une seule base de code et les mêmes fichiers applicatifs compilés pour les deux environnements. Seules la configuration locale et la configuration du serveur web diffèrent.
+- Garder les contraintes IONOS comme socle de portabilité : PHP, MySQL 5.7 et ressources React compilées ; aucun service Node.js permanent, Docker, Redis ou processus de fond obligatoire pour faire fonctionner le site.
+- Fixer la version minimale de PHP et les extensions requises après vérification des deux hébergements. Une version plus récente sur le VPS ne doit pas introduire de dépendance incompatible avec IONOS.
+- Le SQL reste compatible MySQL 5.7 même si le VPS utilise une version MySQL plus récente ou MariaDB. Un succès sur MariaDB ou MySQL récent ne prouve pas la compatibilité MySQL 5.7 : prévoir un contrôle sur la version cible avant livraison IONOS.
+- Isoler la configuration de chaque environnement : URL du site, connexion à la base, chemins des médias, sessions, mode debug et journaux. Aucune adresse VPS, URL de production ou chemin absolu d’hébergement ne doit être codé dans les composants.
+- Prévoir une configuration PHP locale non versionnée, hors de la racine publique, utilisable sans dépendre de variables système configurables uniquement avec des droits administrateur. Fournir un exemple sans secrets lors de l’implémentation.
+- Séparer les bases, comptes administrateurs, secrets et médias de test et de production. Ne pas utiliser la base IONOS pour les tests sur le VPS.
+- Conserver le même domaine d’origine pour les pages, l’administration et l’API au sein de chaque environnement, afin de simplifier les sessions et éviter une dépendance CORS inutile.
+- Ne pas imposer un serveur web spécifique au code applicatif. Si le VPS utilise Nginx, documenter les règles équivalentes aux règles Apache/`.htaccess` de l’hébergement cible.
+- Examiner le `.htaccess` existant avant le premier déploiement : il redirige actuellement vers `pizzamaestro.com`. L’environnement de test doit rester sur son propre domaine, et le domaine de production conserver ses redirections prévues.
+- Protéger l’accès au site de test et demander sa non-indexation, sans confondre cette dernière avec une protection d’accès.
+- Prévoir sauvegarde et retour à la version précédente avant les mises à jour du site et de la base. Documenter les fichiers et migrations utilisés pour chaque publication.
+
+### Vérification de portabilité
+
+Avant de déclarer la compatibilité, vérifier sur chaque cible : pages et ressources, routes, API, connexion et déconnexion, autorisations, sauvegarde d’une pizza et d’une actualité, affichage public après publication, upload d’image et persistance après rechargement.
+
+L’état « fonctionne sur les deux » ne peut être annoncé qu’après les vérifications réalisées sur les deux environnements. D’ici là, distinguer la compatibilité prévue des résultats effectivement observés.
+
 ## Publication des contenus
 
 1. L'administrateur se connecte à l'interface React.

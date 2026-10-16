@@ -8,6 +8,8 @@
 
 Respecter l’architecture validée : pages publiques PHP avec composants React pour les interactions, administration React + TypeScript + Vite, API PHP et MySQL 5.7 sur mutualisé IONOS. Le recours à React et au backend PHP est déjà autorisé.
 
+Le VPS sert aux tests et le mutualisé IONOS reste une cible obligatoire. Appliquer les règles de portabilité de `ARCHITECTURE.md` : une base de code, une configuration par environnement et aucune dépendance exclusive au VPS. Vérifier les redirections existantes avant publication sur le domaine de test.
+
 Mettre à jour `ARCHITECTURE.md` lors d’une nouvelle décision validée. Enrichir `KNOWLEDGE.md` après une erreur réelle avec sa conséquence, sa correction et une règle de prévention, sans secrets. Ne pas présenter les propositions comme des décisions acquises.
 
 
