@@ -182,3 +182,8 @@ Installation existante : appliquer server/migrations/001-opening-hours.sql avec 
 ## Mise à jour Casa — 17 octobre 2026
 
 Voir [CASA.md](CASA.md) : nouvelle page, deux établissements et horaires indépendants sur sept jours. Appliquer la migration 002 avant publication et ajouter la route Nginx Casa.
+
+
+## Sélecteur intégré — 17 octobre 2026
+
+Le sélecteur des établissements fait partie du même en-tête sur les quatre pages. Une capsule indique le lieu actif. Les transitions natives entre documents (CSS View Transitions) animent le curseur et le fondu, sans JavaScript public ni interception des liens. Navigation classique si non prises en charge ; animation désactivée avec prefers-reduced-motion. Référence : https://developer.chrome.com/docs/web-platform/view-transitions/cross-document

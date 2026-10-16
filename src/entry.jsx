@@ -1,5 +1,5 @@
 import { renderToStaticMarkup } from 'react-dom/server';
-import { Header, Footer, PizzaCard, DonScata, UniverseSwitch } from './components.jsx';
+import { Header, Footer, PizzaCard, DonScata } from './components.jsx';
 import Home from './pages/Home.jsx';
 import Menu from './pages/Menu.jsx';
 import Contact from './pages/Contact.jsx';
@@ -34,7 +34,6 @@ export function render(page, stylesheet, dynamic = false, casaStylesheet = '') {
     <body className={casa ? 'casa-theme' : undefined}>
       <a className="skip-link" href="#contenu">Aller au contenu</a>
       {casa ? <CasaHeader /> : <Header page={page} />}
-      <UniverseSwitch casa={casa} />
       <main id="contenu"><Page dynamic={dynamic} /></main>
       {casa ? <CasaFooter /> : <Footer dynamic={dynamic} />}
     </body>

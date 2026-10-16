@@ -1,12 +1,12 @@
 import { media } from '../media.js';
-import { Hours } from '../components.jsx';
+import { Hours, UniverseSwitch } from '../components.jsx';
 
 export const casaMap = 'https://www.google.com/maps/search/?api=1&query=1%20rue%20Barbier%20d%27Aubr%C3%A9e%2063110%20Beaumont';
 
 export function CasaHeader() {
-  return <header className="casa-header">
+  return <header className="casa-header maestro-header">
     <a className="casa-wordmark" href="casa.html" aria-label="La Casa di Maestro, accueil"><span>La Casa</span><span>di Maestro</span></a>
-    <nav aria-label="Navigation du restaurant"><a href="#menu-du-jour">Le menu du jour</a><a href="#venir">Nous trouver</a></nav>
+    <UniverseSwitch casa /><nav className="header-links" aria-label="Navigation du restaurant"><a href="#menu-du-jour">Le menu du jour</a><a href="#venir">Nous trouver</a></nav>
     <a className="casa-button" href="tel:+33984674949">Réserver une table</a>
   </header>;
 }

@@ -15,7 +15,7 @@ test('all four routes are complete HTML with no client JavaScript', async () => 
     assert.equal((html.match(/<h1[ >]/g) || []).length, 1);
     assert.match(html, /<title>[^<]+(?:Pizza Maestro|La Casa di Maestro)<\/title>/);
     assert.doesNotMatch(html, /<script|javascript:|dangerouslySetInnerHTML/);
-    assert.match(html, new RegExp(`href="${page.replace('.', '\\.')}" aria-current="page"`));
+    assert.match(html, new RegExp(`href="${page.replace('.', '\\.')}"[^>]* aria-current="page"`));
     for (const [, ref] of html.matchAll(/(?:src|href)="([^"]+)"/g)) {
       if (/^(https?:|tel:|mailto:|#)/.test(ref)) continue;
       assert.ok(!ref.startsWith('/'), `Root-dependent URL: ${ref}`);

@@ -2,9 +2,9 @@ import { media, variants } from './media.js';
 
 const navigation = [['index.html', 'Accueil'], ['menu.html', 'Nos pizzas'], ['contact.html', 'Nos adresses']];
 export function Header({ page }) {
-  return <header className="site-header">
+  return <header className="site-header maestro-header">
     <a className="brand" href="index.html" aria-label="Pizza Maestro, accueil"><img src={media('images/Logos/logo_main.png')} alt="Pizza Maestro" width="150" height="65" /></a>
-    <nav aria-label="Navigation principale">{navigation.map(([href, text]) => <a key={href} href={href} aria-current={page === href ? 'page' : undefined}>{text}</a>)}</nav>
+    <UniverseSwitch /><nav className="header-links" aria-label="Navigation principale">{navigation.map(([href, text]) => <a key={href} href={href} aria-current={page === href ? 'page' : undefined}>{text}</a>)}</nav>
     <a className="button nav-order" href="contact.html">Commander</a>
   </header>;
 }
@@ -119,5 +119,9 @@ export function Hours({ dynamic = false, venue = 'pizza' }) {
 }
 
 export function UniverseSwitch({ casa = false }) {
-  return <nav className="universe-switch" aria-label="Choisir votre établissement"><span>Deux adresses, deux envies.</span><div><a href="index.html" aria-current={!casa ? 'page' : undefined}><strong>Pizza Maestro</strong><small>Clermont-Ferrand</small></a><a href="casa.html" aria-current={casa ? 'page' : undefined}><strong>La Casa di Maestro</strong><small>Restaurant italien · Beaumont</small></a></div></nav>;
+  return <nav className="universe-switch" aria-label="Choisir votre établissement" data-venue={casa ? 'casa' : 'pizza'}>
+    <span className="universe-indicator" aria-hidden="true" />
+    <a href="index.html" aria-label="Pizza Maestro à Clermont-Ferrand" aria-current={!casa ? 'page' : undefined}><strong>Pizza Maestro</strong><small>Clermont-Ferrand</small></a>
+    <a href="casa.html" aria-label="La Casa di Maestro, restaurant italien à Beaumont" aria-current={casa ? 'page' : undefined}><strong>La Casa <span>di Maestro</span></strong><small>Beaumont</small></a>
+  </nav>;
 }
