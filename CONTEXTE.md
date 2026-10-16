@@ -67,7 +67,7 @@ Photos JPG/PNG/WebP, maximum 6 Mo et 24 mégapixels, validation serveur et réen
 - VPS : vps-328a8329.vps.ovh.ca, Ubuntu. SSH utilisateur ubuntu ; clé locale C:\Users\flori\.ssh\festi-app-vps. Utiliser IdentitiesOnly=yes, BatchMode=yes, StrictHostKeyChecking=yes ; sudo -n disponible. Ne pas lire ni copier le contenu de la clé.
 - Site mariage à la racine dms-app.fr : à préserver. API mariage /api/ proxifiée vers 127.0.0.1:3001 ; contrôle http://127.0.0.1:3001/api/health. Ne toucher qu'au périmètre Maestro.
 - Nginx : /etc/nginx/sites-available/festi-app, bloc BEGIN/END MAESTRO PREVIEW. Configuration versionnée deploy/nginx-maestro-location.conf. Pages .html et API Maestro traitées par PHP ; autres PHP et fichiers privés non exposés.
-- Release active après dernière intervention : /var/www/maestro/releases/hours-20261016-213754 ; lien /var/www/maestro/current. REVISION : 40edb11. Revalider l'état réel avant toute modification.
+- Release active après dernière intervention : /var/www/maestro/releases/casa-20261016-220252 ; lien /var/www/maestro/current. REVISION : 6095b2d. Revalider l'état réel avant toute modification.
 - Une release comprend public/ (dist/) et server/ (.build/server/) hors racine publique. config.local.json est un lien vers shared/config.json.
 - Persistance : /var/www/maestro/shared/config.json (root:www-data 0640), shared/uploads. Ne pas supprimer shared ni remplacer la base lors d'une mise à jour.
 - MySQL : conteneur maestro-mysql57, MySQL 5.7.44, réseau maestro-test, aucun port publié ; base maestro_test, utilisateur maestro_app. Secrets privés serveur. Les secrets ne sont pas dans ce document.
@@ -97,6 +97,11 @@ Selon l'environnement du nouveau chat, les commandes peuvent nécessiter un chem
 
 ## Reprise attendue
 
-Aucune implémentation en cours. La gestion des horaires est livrée sur le VPS et enregistrée localement sur v2. Les deux derniers commits restent locaux : le contrôle automatique a refusé leur envoi sur GitHub faute d’autorisation explicite dans ce chat. Attendre cet accord avant de pousser. Les livraisons précédentes sont sur GitHub v2. Attendre la prochaine demande métier. Les possibilités mentionnées mais non réalisées sont les news et le test/déploiement IONOS ; ne pas les lancer sans demande. Ne pas confondre les textes historiques de VPS.md/ARCHITECTURE.md avec leur dernier état daté.
+La présentation de La Casa di Maestro est livrée sur le VPS : bouton entre les deux ambiances, page casa.html, coordonnées Beaumont, menu fourni et horaires distincts dans l’administration. Chamalières et la ligne jour férié sont retirés. Voir CASA.md pour les détails, images et migration 002. Les nouveaux commits restent locaux sur v2 : un contrôle automatique précédent a refusé l’envoi GitHub faute d’autorisation explicite dans ce chat. Attendre cet accord avant de pousser. Les news et le déploiement IONOS ne sont pas demandés.
 
 Les aperçus et le fichier privé d'activation initial sont dans l'espace local de préparation, hors Git ; ne jamais recopier leurs secrets dans un compte rendu ou un commit. Lire KNOWLEDGE.md avant d'agir : chemins absolus, GD WebP réel, base Vite ./, cache PHP après bascule et contrôles après rechargement.
+
+
+## Livraison Casa — 17 octobre 2026
+
+Version applicative 6095b2d, release casa-20261016-220252 (horloge serveur UTC), sauvegarde /var/backups/maestro/casa-20261016-220252. Migration 002 additive appliquée, ligne Pizza inchangée. Route Nginx Casa ajoutée dans le bloc Maestro, configuration testée et rechargée. Quatre pages et ressources contrôlées, API protégée, cartes de pizzas identiques avant/après, accueil et API mariage intacts. Typecheck, build et sept tests de build réussis ; tests PHP/API isolés et UI mobile/ordinateur réussis. Aperçu public sans erreur console ni image manquante.
