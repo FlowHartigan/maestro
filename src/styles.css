@@ -158,6 +158,6 @@ a{touch-action:manipulation}
 ::view-transition-new(root){animation:420ms ease-out both ambiance-in}
 @keyframes ambiance-out{to{opacity:0}}
 @keyframes ambiance-in{from{opacity:0}to{opacity:1}}
-@media(max-width:800px){.maestro-header{grid-template-columns:1fr auto;grid-template-areas:"brand action" "switch switch" "links links";padding:16px 22px;gap:13px 18px}.maestro-header>.brand img{width:115px;height:46px}.maestro-header .header-links{gap:26px}.maestro-header .universe-switch{width:344px}.maestro-header>.nav-order{display:inline-flex}.maestro-header>.casa-button{margin:0}}
+@media(max-width:800px){.maestro-header{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"brand action" "switch switch" "links links";padding:16px 22px;gap:13px 18px}.maestro-header>.brand img{width:115px;height:46px}.maestro-header .header-links{gap:26px}.maestro-header .universe-switch{width:min(344px,calc(100vw - 48px));min-width:0}.maestro-header>.nav-order{display:inline-flex}.maestro-header>.casa-button{margin:0}}
 @media(max-width:380px){.maestro-header{padding-inline:16px}.maestro-header .universe-switch a{padding-inline:8px}.universe-switch strong{font-size:13px}.maestro-header>.nav-order,.maestro-header>.casa-button{font-size:13px;padding-inline:16px}}
 @media(prefers-reduced-motion:reduce){@view-transition{navigation:none}::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}.maestro-header .universe-switch a{transition:none}}
