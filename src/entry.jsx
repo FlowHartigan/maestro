@@ -1,5 +1,5 @@
 import { renderToStaticMarkup } from 'react-dom/server';
-import { Header, Footer } from './components.jsx';
+import { Header, Footer, PizzaCard, DonScata } from './components.jsx';
 import Home from './pages/Home.jsx';
 import Menu from './pages/Menu.jsx';
 import Contact from './pages/Contact.jsx';
@@ -11,7 +11,7 @@ const pages = {
   'contact.html': [Contact, 'Nos adresses et horaires'],
 };
 
-export function render(page, stylesheet) {
+export function render(page, stylesheet, dynamic = false) {
   const [Page, title] = pages[page];
   return '<!doctype html>' + renderToStaticMarkup(<html lang="fr">
     <head>
@@ -29,8 +29,13 @@ export function render(page, stylesheet) {
     <body>
       <a className="skip-link" href="#contenu">Aller au contenu</a>
       <Header page={page} />
-      <main id="contenu"><Page /></main>
+      <main id="contenu"><Page dynamic={dynamic} /></main>
       <Footer />
     </body>
   </html>);
 }
+
+export function renderCardTemplate() {
+  return renderToStaticMarkup(<PizzaCard pizza={{name:'__NAME__',ingredients:'__INGREDIENTS__',imageUrl:'__IMAGE__',prices:[0,0,0],formattedPrices:['__P26__','__P33__','__P40__']}} />);
+}
+export function renderFeatureTemplate() { return renderToStaticMarkup(<DonScata template />); }

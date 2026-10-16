@@ -88,3 +88,19 @@ Version publique active : `838adba009f9`, dans `/var/www/maestro/releases/838adb
 ## Front React pré-rendu
 
 La livraison React publie uniquement dist/ (trois HTML et assets avec empreintes), préparé par pnpm build et pnpm test. Aucun Node ou React côté serveur de production, aucun changement PHP/MySQL/Nginx nécessaire. Les anciennes sources HTML/CSS/jQuery ne sont plus les sources de référence ; lire README.md.
+
+
+## Administration publiée — 16 octobre 2026
+
+État courant : release admin-20261016-210424 sous /var/www/maestro/releases/, accessible via current. Administration : https://dms-app.fr/maestro/administration/. Les 38 pizzas d'origine sont importées dans maestro_test. Aucun compte administrateur n'est précréé ; activation privée à usage unique.
+
+- PHP-FPM : conteneur maestro-php84, image maestro-php:8.4-admin (PHP 8.4.26, GD WebP activé). Port toujours 127.0.0.1:9084. Ancien conteneur arrêté conservé sous maestro-php84-before-admin pour retour arrière.
+- Configuration persistante : /var/www/maestro/shared/config.json, root:www-data 0640, hors racine publique. Médias persistants : shared/uploads. Les photos initiales sont copiées vers ce stockage avec noms hachés. Ne jamais supprimer shared lors d'une release.
+- Runtime : /opt/maestro-runtime/Dockerfile-admin et maestro-admin.ini, upload 6M, post 7M, erreurs masquées. Montage global Maestro en lecture seule ; seul shared/uploads est monté en écriture pour PHP.
+- MySQL reste maestro-mysql57, version 5.7.44, sans port publié. Tables administrators, app_settings, login_attempts et pizzas. Droits applicatifs SELECT/INSERT/UPDATE/DELETE.
+- Nginx : seules les routes Maestro sont remplacées selon deploy/nginx-maestro-location.conf. Les pages .html passent par PHP, l'API sous /maestro/api/index.php, les ressources admin sont statiques. /api/ du mariage est préservé.
+- Sauvegarde avant bascule : /var/backups/maestro/admin-20261016-210424, ancien Nginx, lien de release et dump MySQL. Retour arrière : restaurer le bloc Maestro après comparaison, repointer current, nginx -t puis reload ; conserver base et médias.
+
+Vérifications : typecheck/build et 5 tests de build réussis ; syntaxe PHP 8.4 et nginx -t valides. Tests API sur une base isolée : activation unique, authentification, CSRF, validation de données et images, brouillons/publication, échappement XSS, conflits de version, persistance et déconnexion. Modification par formulaire vérifiée dans le navigateur. Après publication : 38 photos servies, ressources admin disponibles, configuration et sources privées inaccessibles, API privée 401 sans session, cookie Secure/HttpOnly/SameSite Strict au chemin /maestro/. Accueil mariage inchangé et santé API OK. IONOS non déployé.
+
+Contrôle visuel du formulaire à 390 et 768 px : champs, prix et photo accessibles, disposition empilée sans débordement horizontal visible.

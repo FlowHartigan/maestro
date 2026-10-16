@@ -2,7 +2,7 @@ import pizzas from '../pizzas.json';
 import { PizzaGrid } from '../components.jsx';
 import { Locations, DonScata } from '../components.jsx';
 
-export default function Home() {
+export default function Home({ dynamic = false }) {
   return <>
 
 <section className="hero">
@@ -30,14 +30,14 @@ export default function Home() {
 </div>
 </div>
 </section>
-<DonScata />
+<DonScata dynamic={dynamic} />
 <section className="section selection">
 <div className="container">
 <h2>Un avant-goût de la carte</h2>
 <p className="section-caption">Des classiques italiens aux recettes de Maestro.</p>
-<PizzaGrid pizzas={[pizzas[0], pizzas[3], pizzas[8]]} />
+<PizzaGrid slot={dynamic ? "featured" : undefined} pizzas={[pizzas[0], pizzas[3], pizzas[8]]} />
 <div className="center">
-<a className="button" href="menu.html">Voir les 38 pizzas</a>
+<a className="button" href="menu.html">Voir les {dynamic ? '__COUNT__' : 38} pizzas</a>
 </div>
 </div>
 </section>

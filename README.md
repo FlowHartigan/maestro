@@ -25,16 +25,10 @@ Ouvrir l'adresse indiquée par preview. Après modification d'un composant, rela
 - scripts/build.mjs : optimisation WebP, variantes 480/800 px, empreintes de cache, rendu React et CSS minifié.
 - scripts/build.test.mjs : contrôles des routes, ressources, titres, données et budgets.
 
-## Déploiement
+## Administration et déploiement
 
-Transférer uniquement le contenu de dist/ dans la racine publique voulue. Les URL relatives fonctionnent sous /maestro/ ou à la racine. Aucun fallback SPA ni réécriture supplémentaire requis ; conserver index.html, menu.html et contact.html. Ne pas publier src/, .build/, node_modules/, les documents ou le .htaccess historique. Sur le VPS, créer une nouvelle release et basculer current après contrôle, en gardant l'ancienne pour retour arrière. Sur IONOS, transférer dist/ par SFTP et vérifier les trois pages.
+Lire [ADMINISTRATION.md](ADMINISTRATION.md) pour les comptes, le stockage, les tests et le déploiement PHP/MySQL. L'administration React est servie sous /maestro/administration/. La vitrine reste sans JavaScript applicatif ; PHP remplit les gabarits issus de React avec les pizzas en base à chaque consultation, sans rebuild après modification.
 
-Les noms des images et du CSS incluent une empreinte : les mises à jour ne dépendent pas de la purge du cache navigateur. Ne pas mettre les HTML en cache immutable.
+Déployer dist/ dans public/ et .build/server/ dans server/ hors racine web. La configuration et les photos sont persistantes et privées ou contrôlées selon leur usage. Ne jamais publier le dépôt complet. src/pizzas.json sert uniquement à l'import initial des 38 recettes.
 
-## Poids mesuré
-
-Rapport détaillé créé dans .build/report.json. Images sources utilisées : 20,15 Mo ; images publiées, variantes comprises : 5,01 Mo (−75 %). CSS gzip : environ 2,5 Ko. HTML gzip : environ 2,6 Ko accueil, 4,1 Ko carte, 1,4 Ko contact. JavaScript public : 0 octet. Ces chiffres ne comptent pas les polices Google Fonts et ne sont pas une mesure Lighthouse ni une promesse de débit.
-
-## Limites actuelles
-
-La vitrine est statique ; modifier pizzas.json demande un rebuild. Administration, API PHP et persistance MySQL restent à réaliser. L'intégration future devra conserver la publication dynamique demandée sans rebuild manuel, en ajoutant React côté navigateur uniquement là où nécessaire. La compatibilité de cette livraison statique est vérifiée sur le VPS ; aucun déploiement IONOS n'a été réalisé.
+L'administration charge environ 73 Ko de JavaScript gzip, séparés du site public. Les images originales restent dans images/, les photos ajoutées sont optimisées en WebP côté PHP. Voir .build/report.json pour les mesures du build public.

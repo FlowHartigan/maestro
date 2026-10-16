@@ -123,3 +123,17 @@ Mémoire du projet créée le 16 octobre 2026. Lire ce fichier avant toute inter
 - Conséquence : installation signalée en échec malgré les binaires disponibles.
 - Correction : allowBuilds avec esbuild et sharp à false, puis installation verrouillée, build et tests réussis.
 - Prévention : vérifier la documentation de la version effective du gestionnaire.
+
+
+### 2026-10-16 — Réencodage des photos et fixtures
+
+- Erreurs : supposer que GD permettait WebP sans vérifier sa compilation ; utiliser un PNG de test invalide.
+- Conséquence : échecs d'ajout de pizza dans l'environnement isolé.
+- Correction : compiler GD avec WebP et générer une vraie fixture PNG ; rejouer le parcours complet.
+- Prévention : vérifier imagewebp et imagecreatefromstring sur le runtime cible avant publication, avec un vrai envoi de fichier.
+
+### 2026-10-16 — Base des ressources Vite
+
+- Erreur : utiliser ../ comme base Vite de l'administration.
+- Correction : base ./ et ressources à côté de son index, dans administration/assets/.
+- Prévention : contrôler les URL du build sous le préfixe réel, pas seulement à la racine du serveur local.

@@ -13,3 +13,10 @@ La route `/maestro` redirige vers `/maestro/`, indispensable aux liens relatifs.
 Pour les prochaines évolutions, gérer une base d'URL configurable : `/maestro/` ici et éventuellement `/` chez IONOS. Les ressources, liens, routes React, API et cookies doivent fonctionner sous ce préfixe sans perturber `/api/` de l'application mariage.
 
 Après rechargement Nginx, utiliser des vérifications bornées avec répétition : les anciens workers peuvent encore répondre brièvement. Contrôler les pages, CSS, JavaScript et images de Maestro, ainsi que la racine mariage et son API de santé. Avant un prochain transfert, lire `VPS.md` et vérifier la version active.
+
+
+## Administration PHP/MySQL (16 octobre 2026)
+
+Les consignes statiques antérieures sont remplacées pour les nouvelles releases par ADMINISTRATION.md. Publier dist/ sous public/ et .build/server/ hors racine publique. Utiliser le bloc nginx-maestro-location.conf complet : pages publiques et API passent par PHP-FPM, administration/ reste un bundle React statique. Le préfixe /api/ du mariage ne change pas.
+
+Conserver shared/config.json et shared/uploads à chaque publication. Normaliser les images de seed vers les uploads persistants avant l'import initial. Ne jamais écraser les pizzas existantes. Garder le code d'activation hors dépôt et hors public/. Sauvegarder Nginx, l'ancien lien current et la base avant bascule ; nginx -t avant reload. Un rollback du code ne doit pas supprimer la base ni les médias.

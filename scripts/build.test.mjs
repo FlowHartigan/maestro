@@ -54,10 +54,22 @@ test('hero preload and CSS agree; all background images resolve', async () => {
 });
 
 test('deployment contains only public files and respects the size budget', async () => {
-  assert.deepEqual((await readdir(dist)).sort(), ['assets', 'contact.html', 'index.html', 'menu.html']);
+  assert.deepEqual((await readdir(dist)).sort(), ['.htaccess', 'administration', 'api', 'assets', 'contact.html', 'index.html', 'index.php', 'menu.html']);
   const report = JSON.parse(await readFile(resolve(root, '.build/report.json'), 'utf8'));
   assert.equal(report.browserJavaScriptBytes, 0);
   assert.ok(report.cssGzipBytes < 4000);
   assert.ok(report.optimizedImageBytesIncludingVariants < 6_000_000);
   for (const value of Object.values(report.pages)) assert.ok(value.gzip < 6000);
+});
+
+test('admin assets are local and private templates stay outside public root', async () => {
+  const html = await read('administration/index.html');
+  assert.match(html, /<script type="module"/);
+  for (const [, ref] of html.matchAll(/(?:src|href)="(\.\/assets\/[^"]+)"/g)) {
+    assert.ok((await stat(resolve(dist, 'administration', ref))).isFile());
+  }
+  const template = await readFile(resolve(root, '.build/server/templates/menu.html'), 'utf8');
+  assert.ok(template.includes('<div data-pizza-slot="all"></div>'));
+  assert.ok(!(await readdir(dist)).includes('server'));
+  assert.ok(!(await readdir(dist)).includes('config.local.json'));
 });

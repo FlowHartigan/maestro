@@ -10,13 +10,17 @@ export function Header({ page }) {
 }
 
 const currency = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' });
-export function PizzaGrid({ pizzas }) {
-  return <div className="pizza-grid">{pizzas.map(pizza => <article className="pizza" key={pizza.name}>
-    <img src={media(pizza.image)} srcSet={variants(pizza.image)} sizes="(max-width: 600px) calc(100vw - 36px), (max-width: 900px) 45vw, 370px" alt={`Pizza ${pizza.name}`} width="600" height="450" loading="lazy" decoding="async" />
+export function PizzaCard({ pizza }) {
+  return <article className="pizza">
+    <img src={pizza.imageUrl || media(pizza.image)} srcSet={pizza.imageUrl ? undefined : variants(pizza.image)} sizes="(max-width: 600px) calc(100vw - 36px), (max-width: 900px) 45vw, 370px" alt={`Pizza ${pizza.name}`} width="600" height="450" loading="lazy" decoding="async" />
     <div className="pizza-content"><h3>{pizza.name}</h3><p>{pizza.ingredients}</p>
-      <dl className="prices">{pizza.prices.map((price, i) => <div key={i}><dt>Ø{[26, 33, 40][i]} cm</dt><dd>{currency.format(price)}</dd></div>)}</dl>
+      <dl className="prices">{pizza.prices.map((price, i) => <div key={i}><dt>Ø{[26, 33, 40][i]} cm</dt><dd>{pizza.formattedPrices?.[i] || currency.format(price)}</dd></div>)}</dl>
     </div>
-  </article>)}</div>;
+  </article>;
+}
+export function PizzaGrid({ pizzas, slot }) {
+  if (slot) return <div data-pizza-slot={slot} />;
+  return <div className="pizza-grid">{pizzas.map(pizza => <PizzaCard key={pizza.name} pizza={pizza} />)}</div>;
 }
 
 export function Footer() {
@@ -85,22 +89,23 @@ export function Locations() {
   );
 }
 
-export function DonScata() {
+export function DonScata({ dynamic = false, template = false }) {
+  if (dynamic) return <div data-pizza-slot="don" />;
   return (
 <section className="don-scata-feature" aria-labelledby="don-scata-title">
 <div className="container don-scata-layout">
 <div className="don-scata-copy">
-<h2 id="don-scata-title">Don Scata</h2>
-<p className="don-scata-range">11,50 à 17,10&nbsp;€</p>
-<p className="don-scata-ingredients">Mozzarella, champignons, rosette, chorizo fort, merguez et œuf.</p>
+<h2 id="don-scata-title">{template ? '__NAME__' : 'Don Scata'}</h2>
+<p className="don-scata-range">{template ? '__P26__ à __P40__' : '11,50 à 17,10\u00a0€'}</p>
+<p className="don-scata-ingredients">{template ? '__INGREDIENTS__' : 'Mozzarella, champignons, rosette, chorizo fort, merguez et œuf.'}</p>
 <dl className="don-scata-sizes">
-<div><dt>26 cm</dt><dd>11,50&nbsp;€</dd></div>
-<div><dt>33 cm</dt><dd>13,70&nbsp;€</dd></div>
-<div><dt>40 cm</dt><dd>17,10&nbsp;€</dd></div>
+<div><dt>26 cm</dt><dd>{template ? '__P26__' : '11,50\u00a0€'}</dd></div>
+<div><dt>33 cm</dt><dd>{template ? '__P33__' : '13,70\u00a0€'}</dd></div>
+<div><dt>40 cm</dt><dd>{template ? '__P40__' : '17,10\u00a0€'}</dd></div>
 </dl>
-<a className="button" href="contact.html">Commander la Don Scata</a>
+<a className="button" href="contact.html">{template ? 'Commander __NAME__' : 'Commander la Don Scata'}</a>
 </div>
-<img className="don-scata-image" src={media("images/pizzeria/don-scata-feature.png")} alt="La pizza Don Scata, garnie de mozzarella, champignons, charcuteries et d’un œuf au centre" width="1280" height="1280" loading="lazy" />
+<img className="don-scata-image" src={template ? '__IMAGE__' : media('images/pizzeria/don-scata-feature.png')} alt={template ? 'Pizza __NAME__' : 'La pizza Don Scata, garnie de mozzarella, champignons, charcuteries et d’un œuf au centre'} width="1280" height="1280" loading="lazy" />
 </div>
 </section>
 

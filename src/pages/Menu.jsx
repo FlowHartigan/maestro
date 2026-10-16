@@ -1,7 +1,7 @@
 import pizzas from '../pizzas.json';
 import { PizzaGrid } from '../components.jsx';
 
-export default function Menu() {
+export default function Menu({ dynamic = false }) {
   return <>
 
 <section className="page-title">
@@ -14,7 +14,7 @@ export default function Menu() {
 <p>Chaque pizza existe en trois formats : 26, 33 et 40 cm.<br />Retrouvez votre recette et appelez votre pizzeria pour commander.</p>
 <a className="button" href="contact.html">Choisir ma pizzeria</a>
 </div>
-<PizzaGrid pizzas={pizzas} />
+<PizzaGrid slot={dynamic ? "all" : undefined} pizzas={pizzas} />
 </section>
 
   </>;

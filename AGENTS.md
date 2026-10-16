@@ -6,7 +6,7 @@
 2. Lire `KNOWLEDGE.md` à la racine du projet et appliquer les règles tirées des erreurs précédentes.
 3. Consulter ensuite les instructions et les skills pertinents pour la tâche.
 
-Respecter la dernière décision dans ARCHITECTURE.md : front public entièrement React JSX, pré-rendu au build pour minimiser le JavaScript ; administration React + TypeScript + Vite, API PHP 8.4 et MySQL 5.7 restent la cible future. Le recours à React et au backend PHP est déjà autorisé.
+Respecter la dernière décision dans ARCHITECTURE.md : front public entièrement React JSX, pré-rendu au build pour minimiser le JavaScript ; administration React + TypeScript + Vite, API PHP 8.4 et MySQL 5.7 assurent maintenant la gestion des pizzas. Lire ADMINISTRATION.md. Le recours à React et au backend PHP est déjà autorisé.
 
 Le VPS sert aux tests et le mutualisé IONOS reste une cible obligatoire. Appliquer les règles de portabilité de `ARCHITECTURE.md` : une base de code, une configuration par environnement et aucune dépendance exclusive au VPS. Vérifier les redirections existantes avant publication sur le domaine de test.
 
@@ -113,4 +113,4 @@ Lire `VPS.md` avant toute intervention serveur : il décrit les accès non secre
 
 ## Front React actuel
 
-Modifier src/pages/, src/components.jsx, src/styles.css et src/pizzas.json. Ne pas recréer de pages HTML manuelles à la racine. Exécuter pnpm build puis pnpm test ; publier uniquement dist/. Les anciennes bibliothèques Bootstrap/jQuery et leurs styles ont été retirés. Lire README.md.
+Modifier src/pages/, src/components.jsx, src/styles.css et src/pizzas.json. Ne pas recréer de pages HTML manuelles à la racine. Exécuter pnpm typecheck, pnpm build puis pnpm test. Déployer dist/ dans public/ et .build/server/ hors racine publique selon ADMINISTRATION.md. Les anciennes bibliothèques Bootstrap/jQuery et leurs styles ont été retirés. Lire README.md.

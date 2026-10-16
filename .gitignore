@@ -19,3 +19,5 @@ node_modules/
 # React build artifacts
 dist/
 .build/
+
+config.local.json

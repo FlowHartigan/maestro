@@ -1,4 +1,4 @@
-import { mkdir, readFile, writeFile, rm } from 'node:fs/promises';
+import { mkdir, readFile, writeFile, rm, cp } from 'node:fs/promises';
 import { resolve, basename } from 'node:path';
 import { createHash } from 'node:crypto';
 import { pathToFileURL } from 'node:url';
@@ -50,7 +50,7 @@ const minified = (await transformWithEsbuild(css, 'styles.css', { loader: 'css',
 const stylesheet = `assets/styles-${hash(minified)}.css`;
 await writeFile(resolve(dist, stylesheet), minified);
 await build({ configFile: false, publicDir: false, esbuild: { jsx: 'automatic' }, build: { ssr: 'src/entry.jsx', outDir: '.build', emptyOutDir: false, rollupOptions: { output: { entryFileNames: 'entry.mjs' } } } });
-const { render } = await import(pathToFileURL(resolve(root, '.build/entry.mjs')).href);
+const { render, renderCardTemplate, renderFeatureTemplate } = await import(pathToFileURL(resolve(root, '.build/entry.mjs')).href);
 const pageSizes = {};
 for (const page of ['index.html', 'menu.html', 'contact.html']) {
   const html = render(page, stylesheet);
@@ -60,3 +60,19 @@ for (const page of ['index.html', 'menu.html', 'contact.html']) {
 const report = { originalImageBytes: originalBytes, optimizedImageBytesIncludingVariants: optimizedBytes, reductionPercent: Math.round((1 - optimizedBytes / originalBytes) * 100), browserJavaScriptBytes: 0, cssGzipBytes: gzipSync(minified).length, pages: pageSizes };
 await writeFile('.build/report.json', JSON.stringify(report, null, 2));
 console.log(JSON.stringify(report, null, 2));
+
+// React produces the HTML templates; PHP substitutes escaped database content at request time.
+await mkdir('.build/server/templates', {recursive:true});
+await cp('server', '.build/server', {recursive:true});
+for (const page of ['index.html','menu.html','contact.html']) {
+  await writeFile(`.build/server/templates/${page}`, render(page, stylesheet, true));
+}
+await writeFile('.build/server/templates/card.html', renderCardTemplate());
+await writeFile('.build/server/templates/feature.html', renderFeatureTemplate());
+await writeFile('.build/server/feature.json', JSON.stringify({image:manifest['images/pizzeria/don-scata-feature.png'].src}));
+await writeFile('.build/server/seed.json', JSON.stringify(pizzas.map((p,i) => ({id:i+1,name:p.name,ingredients:p.ingredients,prices:p.prices,image:manifest[p.image].src,sort_order:i}))));
+await cp('public', 'dist', {recursive:true});
+await build({configFile:false,root:'admin',base:'./',publicDir:false,esbuild:{jsx:'automatic'},build:{outDir:'../.build/admin',emptyOutDir:true,assetsDir:'assets',rollupOptions:{input:'admin/index.html'}}});
+await mkdir('dist/administration', {recursive:true});
+await cp('.build/admin/index.html','dist/administration/index.html');
+await cp('.build/admin/assets','dist/administration/assets', {recursive:true});

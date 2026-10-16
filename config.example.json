@@ -1,0 +1,10 @@
+{
+  "host": "localhost",
+  "port": 3306,
+  "database": "maestro",
+  "username": "maestro_app",
+  "password": "REPLACE_LOCALLY",
+  "base_path": "/maestro",
+  "upload_dir": "/absolute/path/outside-release/uploads",
+  "secure_cookies": true
+}

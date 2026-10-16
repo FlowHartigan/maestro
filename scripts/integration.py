@@ -1,0 +1,53 @@
+"""Run only against a fresh, isolated integration database and private PHP server."""
+import urllib.request, urllib.error, http.cookiejar, json, secrets, base64, sys, re
+base=sys.argv[1].rstrip('/')
+token=open(sys.argv[2]).read().strip()
+jar=http.cookiejar.CookieJar(); client=urllib.request.build_opener(urllib.request.HTTPCookieProcessor(jar))
+csrf=''
+def call(action,data=None,status=200,send_csrf=True,files=None):
+    headers={}
+    if data is not None:
+        if files:
+            boundary='Maestro'+secrets.token_hex(12);chunks=[]
+            for k,v in data.items():chunks.append(f'--{boundary}\r\nContent-Disposition: form-data; name="{k}"\r\n\r\n{v}\r\n'.encode())
+            for k,(name,mime,body) in files.items():chunks.append(f'--{boundary}\r\nContent-Disposition: form-data; name="{k}"; filename="{name}"\r\nContent-Type: {mime}\r\n\r\n'.encode()+body+b'\r\n')
+            payload=b''.join(chunks)+f'--{boundary}--\r\n'.encode();headers['Content-Type']='multipart/form-data; boundary='+boundary
+        else:payload=json.dumps(data).encode();headers['Content-Type']='application/json'
+        if send_csrf:headers['X-CSRF-Token']=csrf
+    else:payload=None
+    try:
+        response=client.open(urllib.request.Request(base+'/api/index.php?action='+action,data=payload,headers=headers));code=response.status;body=response.read()
+    except urllib.error.HTTPError as e:code=e.code;body=e.read()
+    assert code==status,(action,code,status,body[:300])
+    return json.loads(body)
+session=call('session');csrf=session['csrf'];assert session['setupRequired']
+call('pizzas',status=401)
+call('setup',{'username':'integration-admin','password':'Maestro-Integration-2026!','token':token},status=403,send_csrf=False)
+session=call('setup',{'username':'integration-admin','password':'Maestro-Integration-2026!','token':token});csrf=session['csrf']
+call('setup',{'username':'second-admin','password':'Maestro-Integration-2026!','token':token},status=403)
+pizzas=call('pizzas')['pizzas'];assert len(pizzas)==38
+call('save',{'name':'','ingredients':'x','price26':'10','price33':'11','price40':'12','published':'0'},status=422)
+payload={'id':'0','version':'0','name':'Test <script>alert(1)</script>','ingredients':'Mozzarella & basilic','price26':'10.20','price33':'12.30','price40':'14.40','published':'0'}
+call('save',payload,status=422,files={'photo':('x.svg','image/svg+xml',b'<svg xmlns="http://www.w3.org/2000/svg"/>')})
+import struct,zlib
+def chunk(kind,data):return struct.pack('!I',len(data))+kind+data+struct.pack('!I',zlib.crc32(kind+data)&0xffffffff)
+png=b'\x89PNG\r\n\x1a\n'+chunk(b'IHDR',struct.pack('!2I5B',16,16,8,2,0,0,0))+chunk(b'IDAT',zlib.compress((b'\x00'+b'\xff\xa0\x20'*16)*16))+chunk(b'IEND',b'')
+created=call('save',payload,status=201,files={'photo':('pizza.png','image/png',png)})['pizza']
+html=client.open(base+'/menu.html').read().decode();assert 'Test &lt;script&gt;' not in html
+created['published']=1
+saved=call('save',created)['pizza'];assert saved['version']==2
+html=client.open(base+'/menu.html').read().decode();assert 'Test &lt;script&gt;alert(1)&lt;/script&gt;' in html and '<script>alert(1)</script>' not in html
+assert '10,20' in html and saved['image'] in html
+call('save',created,status=409)
+saved['price26']='-1';call('save',saved,status=422);saved['price26']='11.25'
+saved=call('save',saved)['pizza'];assert saved['price26']=='11.25'
+assert '11,25' in client.open(base+'/menu.html').read().decode()
+assert client.open(base+'/'+saved['image']).headers['Content-Type']=='image/webp'
+call('logout',{})
+session=call('session');csrf=session['csrf'];assert session['user'] is None
+call('pizzas',status=401)
+call('login',{'username':'integration-admin','password':'wrong'},status=401)
+session=call('login',{'username':'integration-admin','password':'Maestro-Integration-2026!'});csrf=session['csrf']
+assert len(call('pizzas')['pizzas'])==39
+call('logout',{})
+print('PASS: setup once, auth, CSRF, invalid data, upload validation, draft, publication, XSS escaping, updates, conflict, persistence, logout/login')
