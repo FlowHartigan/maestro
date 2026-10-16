@@ -18,6 +18,11 @@ try {
         $slot = '<div data-hours-slot="' . $venue . '"></div>';
         if (str_contains($html, $slot)) $html = str_replace($slot, hoursHTML(openingHours($venue)['days']), $html);
     }
+    if ($page === 'casa.html') {
+        $menu = dailyMenu();
+        $content = $menu['isDefault'] ? file_get_contents(__DIR__ . '/templates/daily-menu.html') : '<figure class="casa-menu-photo"><a href="' . escape($menu['image']) . '" target="_blank" rel="noreferrer" aria-label="Ouvrir le menu du jour en grand (nouvel onglet)"><img src="' . escape($menu['image']) . '" alt="Menu du jour de La Casa di Maestro" loading="lazy" decoding="async" /></a><figcaption>Cliquez sur le menu pour l’agrandir.</figcaption></figure>';
+        $html = str_replace('<div data-daily-menu-slot="casa"></div>', $content, $html);
+    }
     if (in_array($page, ['contact.html', 'casa.html'], true)) { echo $html; exit; }
     $pizzas = allPizzas(true);
     $card = file_get_contents(__DIR__ . '/templates/card.html');

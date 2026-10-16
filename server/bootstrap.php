@@ -63,7 +63,7 @@ function pizzaInput(array $data): array {
     // Every saved pizza is public; clients cannot create hidden drafts.
     return [$name, $ingredients, ...$prices, 1];
 }
-function uploadPhoto(): ?string {
+function uploadPhoto(int $maxEdge = 1200, int $quality = 82): ?string {
     $file = $_FILES['photo'] ?? null;
     if (!$file || $file['error'] === UPLOAD_ERR_NO_FILE) return null;
     if ($file['error'] !== UPLOAD_ERR_OK || $file['size'] > 6 * 1024 * 1024) fail('La photo doit peser moins de 6 Mo.', 422);
@@ -71,11 +71,11 @@ function uploadPhoto(): ?string {
     if (!$info || !in_array($info['mime'], ['image/jpeg', 'image/png', 'image/webp'], true) || $info[0] * $info[1] > 24000000) fail('Choisissez une image JPG, PNG ou WebP de moins de 24 mégapixels.', 422);
     $source = @imagecreatefromstring(file_get_contents($file['tmp_name']));
     if (!$source) fail('Impossible de lire cette image.', 422);
-    $scale = min(1, 1200 / max(imagesx($source), imagesy($source)));
+    $scale = min(1, $maxEdge / max(imagesx($source), imagesy($source)));
     $image = imagescale($source, max(1, (int)(imagesx($source) * $scale)), max(1, (int)(imagesy($source) * $scale)));
     imagealphablending($image, false); imagesavealpha($image, true);
     $name = bin2hex(random_bytes(20)) . '.webp';
-    if (!imagewebp($image, config()['upload_dir'] . '/' . $name, 82)) throw new RuntimeException('Upload write failed');
+    if (!imagewebp($image, config()['upload_dir'] . '/' . $name, $quality)) throw new RuntimeException('Upload write failed');
     imagedestroy($source); imagedestroy($image);
     return 'uploads/' . $name;
 }
@@ -87,3 +87,5 @@ function allPizzas(bool $publishedOnly = false): array {
 }
 
 require_once __DIR__ . '/hours.php';
+
+require_once __DIR__ . '/daily-menu.php';

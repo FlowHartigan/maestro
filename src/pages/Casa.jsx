@@ -30,6 +30,23 @@ export default function Casa({ dynamic = false }) {
         <h2 id="menu-title">Le menu du jour</h2>
         <p>Lasagnes, focaccia, pizzas, tiramisu…<br />Retrouvez les saveurs de l’Italie autour d’une bonne table.</p>
       </div>
+      {dynamic ? <div data-daily-menu-slot="casa" /> : <DefaultCasaMenu />}
+    </section>
+
+    <section className="casa-visit" id="venir" aria-labelledby="visit-title">
+      <div className="container casa-visit-grid">
+        <div className="casa-address"><span className="casa-script">Ci vediamo presto</span><h2 id="visit-title">On se retrouve<br />à Beaumont.</h2><address>La Casa di Maestro<br />1 rue Barbier d’Aubrée<br />63110 Beaumont</address><a className="casa-phone" href="tel:+33984674949">09 84 67 49 49</a><div className="casa-visit-actions"><a className="casa-button" href="tel:+33984674949">Réserver par téléphone</a><a href={casaMap}>Préparer mon itinéraire</a></div></div>
+        <div className="casa-opening"><h3>Les horaires du restaurant</h3><Hours dynamic={dynamic} venue="casa" /></div>
+      </div>
+    </section>
+  </>;
+}
+
+export function CasaFooter() {
+  return <footer className="casa-footer"><div className="container"><a className="casa-wordmark" href="casa.html"><span>La Casa</span><span>di Maestro</span></a><p>Restaurant italien · Beaumont</p><a href="index.html">Retrouver Pizza Maestro à Clermont-Ferrand</a></div></footer>;
+}
+
+export function DefaultCasaMenu() { return <>
       <figure className="casa-menu-photo">
         <a href={media('images/casa/menu-du-jour.png')} target="_blank" rel="noreferrer" aria-label="Ouvrir la photo du menu du jour en grand (nouvel onglet)">
           <img src={media('images/casa/menu-du-jour.png')} width="1206" height="1596" alt="Menu du jour de La Casa di Maestro : les formules et les plats sont également disponibles en texte ci-dessous." loading="lazy" decoding="async" />
@@ -45,17 +62,5 @@ export default function Casa({ dynamic = false }) {
           <section><h3>Desserts</h3><ul><li>Assiette de fromages</li><li>Tiramisu</li><li>Mousse au chocolat</li><li>Panna cotta</li></ul></section>
         </div>
       </details>
-    </section>
 
-    <section className="casa-visit" id="venir" aria-labelledby="visit-title">
-      <div className="container casa-visit-grid">
-        <div className="casa-address"><span className="casa-script">Ci vediamo presto</span><h2 id="visit-title">On se retrouve<br />à Beaumont.</h2><address>La Casa di Maestro<br />1 rue Barbier d’Aubrée<br />63110 Beaumont</address><a className="casa-phone" href="tel:+33984674949">09 84 67 49 49</a><div className="casa-visit-actions"><a className="casa-button" href="tel:+33984674949">Réserver par téléphone</a><a href={casaMap}>Préparer mon itinéraire</a></div></div>
-        <div className="casa-opening"><h3>Les horaires du restaurant</h3><Hours dynamic={dynamic} venue="casa" /></div>
-      </div>
-    </section>
-  </>;
-}
-
-export function CasaFooter() {
-  return <footer className="casa-footer"><div className="container"><a className="casa-wordmark" href="casa.html"><span>La Casa</span><span>di Maestro</span></a><p>Restaurant italien · Beaumont</p><a href="index.html">Retrouver Pizza Maestro à Clermont-Ferrand</a></div></footer>;
-}
+</>; }

@@ -187,3 +187,8 @@ Voir [CASA.md](CASA.md) : nouvelle page, deux établissements et horaires indép
 ## Sélecteur intégré — 17 octobre 2026
 
 Le sélecteur des établissements fait partie du même en-tête sur les quatre pages. Une capsule indique le lieu actif. Les transitions natives entre documents (CSS View Transitions) animent le curseur et le fondu, sans JavaScript public ni interception des liens. Navigation classique si non prises en charge ; animation désactivée avec prefers-reduced-motion. Référence : https://developer.chrome.com/docs/web-platform/view-transitions/cross-document
+
+
+## Menu Casa administrable — 17 octobre 2026
+
+Configuration par établissement ; image du menu Casa stockée dans les uploads persistants et référencée par daily_menu (migration 003), rendu PHP sans rebuild. Voir ADMINISTRATION.md pour les limites et les contrôles. La transcription initiale est affichée uniquement pour le menu d’origine.

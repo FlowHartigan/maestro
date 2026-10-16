@@ -13,6 +13,7 @@ try {
     }
     if ($method === 'GET' && $action === 'pizzas') { requireUser(); respond(['pizzas' => allPizzas()]); }
     if ($method === 'GET' && $action === 'hours') { requireUser(); $venue = hoursVenue($_GET['venue'] ?? 'pizza'); respond(['hours' => openingHours($venue), 'defaults' => defaultHours($venue)]); }
+    if ($method === 'GET' && $action === 'daily-menu') { requireUser(); respond(['menu' => dailyMenu()]); }
     if ($method !== 'POST') fail('Méthode non autorisée.', 405);
     csrf();
     $data = str_contains($_SERVER['CONTENT_TYPE'] ?? '', 'application/json') ? json_decode(file_get_contents('php://input'), true, 512, JSON_THROW_ON_ERROR) : $_POST;
@@ -43,6 +44,7 @@ try {
     }
     requireUser();
     if ($action === 'logout') { $_SESSION = []; session_destroy(); respond(['ok' => true]); }
+    if ($action === 'save-daily-menu') saveDailyMenu($data);
     if ($action === 'save-hours') {
         $venue = hoursVenue($data['venue'] ?? 'pizza');
         try { $days = validateHours($data['days'] ?? null); }

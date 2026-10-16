@@ -23,6 +23,8 @@ def call(action,data=None,status=200,send_csrf=True,files=None):
 session=call('session');csrf=session['csrf'];assert session['setupRequired']
 call('pizzas',status=401)
 call('hours',status=401)
+call('daily-menu',status=401)
+call('save-daily-menu',{'version':1},status=401)
 call('save-hours',{'days':[], 'version':1},status=401)
 call('delete',{'id':1,'version':1},status=401)
 call('setup',{'username':'integration-admin','password':'Maestro-Integration-2026!','token':token},status=403,send_csrf=False)
@@ -114,5 +116,33 @@ assert '12h15 – 14h15' not in client.open(base+'/').read().decode()
 call('save-hours',{'venue':'casa','days':casa_days,'version':1},status=409)
 call('save-hours',{'venue':'casa','days':casa_initial['defaults'],'version':2})
 print('PASS: separate Casa/Pizza defaults, saving, independent versions, protected venue selection, public schedules')
+# Daily menu uploads must affect Casa only and retain data after reloading.
+initial_menu=call('daily-menu')['menu'];assert initial_menu['isDefault'] and initial_menu['version']==1
+pizza_html=client.open(base+'/menu.html').read()
+hours_before=[call('hours')['hours'],call('hours&venue=casa')['hours']]
+call('save-daily-menu',{'version':1},status=403,send_csrf=False)
+call('save-daily-menu',{'version':1},status=422)
+call('save-daily-menu',{'version':0,'reset':'1'},status=422)
+for name,mime,body in [('fake.png','image/png',b'not an image'),('menu.svg','image/svg+xml',b'<svg/>'),('huge.png','image/png',png+b'0'*(6*1024*1024))]:
+    call('save-daily-menu',{'version':1},status=422,files={'photo':(name,mime,body)})
+assert call('daily-menu')['menu']==initial_menu
+saved_menu=call('save-daily-menu',{'version':1},files={'photo':('menu.png','image/png',png)})['menu']
+assert saved_menu['version']==2 and not saved_menu['isDefault'] and saved_menu['image'].startswith('uploads/')
+assert call('daily-menu')['menu']==saved_menu
+assert client.open(base+'/'+saved_menu['image']).headers['Content-Type']=='image/webp'
+html=client.open(base+'/casa.html').read().decode()
+assert saved_menu['image'] in html and 'data-daily-menu-slot' not in html
+assert 'Terrine de sanglier' not in html and 'Lire le menu en texte' not in html
+assert client.open(base+'/menu.html').read()==pizza_html
+assert [call('hours')['hours'],call('hours&venue=casa')['hours']]==hours_before
+call('save-daily-menu',{'version':1,'reset':'1'},status=409)
+call('logout',{})
+csrf=call('session')['csrf']
+session=call('login',{'username':'integration-admin','password':'Maestro-Integration-2026!'});csrf=session['csrf']
+assert call('daily-menu')['menu']==saved_menu
+restored_menu=call('save-daily-menu',{'version':2,'reset':'1'})['menu']
+assert restored_menu['isDefault'] and restored_menu['image']==initial_menu['image'] and restored_menu['version']==3
+assert 'Terrine de sanglier' in client.open(base+'/casa.html').read().decode()
+print('PASS: daily menu auth, CSRF, file validation, upload, persistence, public display, no stale transcription, independent settings, conflict and reset')
 call('logout',{})
 print('PASS: setup once, auth, CSRF, invalid data, upload validation, automatic publication, default image, XSS escaping, updates, conflict, persistence, logout/login, protected deletion, stale version, removal from public site')

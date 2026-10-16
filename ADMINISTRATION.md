@@ -53,3 +53,16 @@ Installation existante : appliquer server/migrations/001-opening-hours.sql avec 
 ## Mise à jour Casa — 17 octobre 2026
 
 Voir [CASA.md](CASA.md) : nouvelle page, deux établissements et horaires indépendants sur sept jours. Appliquer la migration 002 avant publication et ajouter la route Nginx Casa.
+
+
+## Configuration par établissement — 17 octobre 2026
+
+L’administration commence par le choix de l’établissement. Pizza Maestro propose Pizzas et Horaires ; La Casa propose Menu du jour et Horaires. Les horaires restent indépendants (id 1 Pizza, id 2 Casa). Le même compte administrateur gère les deux établissements ; il ne s’agit pas de comptes ou de droits distincts.
+
+Pour Casa : choisir une image JPG, PNG ou WebP, contrôler l’aperçu, puis Publier le menu. La publication est partagée entre tous les visiteurs et ne nécessite pas de reconstruction du site. Les modifications non enregistrées sont signalées et protégées au changement de rubrique ou d’établissement. Annuler conserve la publication ; Menu d’origine demande confirmation et restaure l’image initiale. En cas de conflit, recharger avant de réessayer.
+
+Limites : 6 Mo, 24 mégapixels ; vérification et décodage côté serveur, réencodage WebP (bord maximal 2400 px, qualité 92 pour la lisibilité), nom aléatoire dans les uploads persistants. Table `daily_menu` : image nullable, version ; NULL utilise `default-menu.json` issu du build. Les anciennes images restent conservées pour les sauvegardes. Session, CSRF et contrôle de version protègent l’enregistrement. Aucun secret côté navigateur.
+
+Appliquer la migration additive et réexécutable `server/migrations/003-daily-menu.sql` avant le code ; elle ne modifie ni les pizzas ni les horaires. La page Casa injecte l’image depuis MySQL. Lors d’un remplacement, la transcription du menu initial est retirée afin de ne pas afficher des plats obsolètes ; elle revient avec Menu d’origine. Le nouveau menu image n’a pas de transcription automatique.
+
+Vérifications : typecheck, build, sept tests de build ; tests API isolés de validation (dont fichier trop lourd et faux PNG), authentification, CSRF, téléversement, persistance après reconnexion, conflits, restauration, publication Casa et non-modification des pizzas/horaires. Parcours de choix d’établissement et de publication vérifié dans le navigateur, dont mobile 390 px.

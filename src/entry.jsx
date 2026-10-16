@@ -3,7 +3,7 @@ import { Header, Footer, PizzaCard, DonScata } from './components.jsx';
 import Home from './pages/Home.jsx';
 import Menu from './pages/Menu.jsx';
 import Contact from './pages/Contact.jsx';
-import Casa, { CasaHeader, CasaFooter } from './pages/Casa.jsx';
+import Casa, { CasaHeader, CasaFooter, DefaultCasaMenu } from './pages/Casa.jsx';
 import { media } from './media.js';
 
 const pages = {
@@ -44,3 +44,5 @@ export function renderCardTemplate() {
   return renderToStaticMarkup(<PizzaCard pizza={{name:'__NAME__',ingredients:'__INGREDIENTS__',imageUrl:'__IMAGE__',prices:[0,0,0],formattedPrices:['__P26__','__P33__','__P40__']}} />);
 }
 export function renderFeatureTemplate() { return renderToStaticMarkup(<DonScata template />); }
+
+export function renderDailyMenuTemplate() { return renderToStaticMarkup(<DefaultCasaMenu />); }

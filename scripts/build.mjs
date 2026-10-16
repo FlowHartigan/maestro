@@ -50,7 +50,7 @@ const minified = (await transformWithEsbuild(css, 'styles.css', { loader: 'css',
 const stylesheet = `assets/styles-${hash(minified)}.css`;
 await writeFile(resolve(dist, stylesheet), minified);
 await build({ configFile: false, publicDir: false, esbuild: { jsx: 'automatic' }, build: { ssr: 'src/entry.jsx', outDir: '.build', emptyOutDir: false, rollupOptions: { output: { entryFileNames: 'entry.mjs' } } } });
-const { render, renderCardTemplate, renderFeatureTemplate } = await import(pathToFileURL(resolve(root, '.build/entry.mjs')).href);
+const { render, renderCardTemplate, renderFeatureTemplate, renderDailyMenuTemplate } = await import(pathToFileURL(resolve(root, '.build/entry.mjs')).href);
 const casaCSS = (await transformWithEsbuild(await readFile('src/casa.css', 'utf8'), 'casa.css', { loader: 'css', minify: true })).code;
 const casaStylesheet = `assets/casa-${hash(casaCSS)}.css`;
 await writeFile(resolve(dist, casaStylesheet), casaCSS);
@@ -85,3 +85,6 @@ await build({configFile:false,root:'admin',base:'./',publicDir:false,esbuild:{js
 await mkdir('dist/administration', {recursive:true});
 await cp('.build/admin/index.html','dist/administration/index.html');
 await cp('.build/admin/assets','dist/administration/assets', {recursive:true});
+
+await writeFile('.build/server/templates/daily-menu.html', renderDailyMenuTemplate());
+await writeFile('.build/server/default-menu.json', JSON.stringify({image:manifest['images/casa/menu-du-jour.png'].src}));

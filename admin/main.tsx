@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState, type FormEvent } from 'react';
 import { createRoot } from 'react-dom/client';
 import './style.css';
 import HoursEditor from './HoursEditor';
+import DailyMenuEditor from './DailyMenuEditor';
 
 type Pizza = { id: number; name: string; ingredients: string; price26: string; price33: string; price40: string; image: string; published: number; version: number };
 type Session = { user: { username: string } | null; csrf: string; setupRequired?: boolean; defaultImage?: string };
@@ -22,8 +23,8 @@ async function request(action: string, body?: FormData | object, csrf?: string) 
 }
 
 function App() {
-  const [hoursVenue, setHoursVenue] = useState<'pizza' | 'casa'>('pizza');
-  const [section, setSection] = useState<'pizzas' | 'hours'>('pizzas');
+  const [venue, setVenue] = useState<'pizza' | 'casa'>('pizza');
+  const [section, setSection] = useState<'pizzas' | 'hours' | 'daily-menu'>('pizzas');
   const [session, setSession] = useState<Session | null>(null);
   const [items, setItems] = useState<Pizza[]>([]);
   const [selected, setSelected] = useState<Pizza | null>(null);
@@ -71,7 +72,7 @@ function App() {
     setError('');
     try {
       await request('logout', {}, session?.csrf);
-      setSelected(null); setDirty(false); setItems([]); setSection('pizzas');
+      setSelected(null); setDirty(false); setItems([]); setSection('pizzas'); setVenue('pizza');
       setSession(await request('session'));
     } catch (e) { setError((e as Error).message); }
   }
@@ -94,16 +95,17 @@ function App() {
 
   const filtered = items.filter(p => `${p.name} ${p.ingredients}`.toLocaleLowerCase('fr').includes(query.toLocaleLowerCase('fr')));
   return <>
-    <header className="topbar"><a className="brand" href="../">Maestro</a><span>Administration</span><div className="top-actions"><a href="../menu.html" target="_blank" rel="noreferrer">Voir la carte ↗</a><button onClick={logout}>Se déconnecter</button></div></header>
+    <header className="topbar"><a className="brand" href="../">Maestro</a><span>Administration</span><div className="top-actions"><a href={venue === 'casa' ? "../casa.html" : "../menu.html"} target="_blank" rel="noreferrer">{venue === 'casa' ? 'Voir La Casa ↗' : 'Voir la carte ↗'}</a><button onClick={logout}>Se déconnecter</button></div></header>
     <main className="workspace">
-      <nav className="admin-sections" aria-label="Rubriques de l’administration">{([['pizzas', 'Pizzas'], ['hours', 'Horaires']] as const).map(([key, label]) => <button key={key} aria-current={section === key ? 'page' : undefined} disabled={saving} onClick={() => {
+      <nav className="admin-venues" aria-label="Établissement à configurer">{([['pizza', 'Pizza Maestro', 'Clermont-Ferrand'], ['casa', 'La Casa di Maestro', 'Beaumont']] as const).map(([value, label, city]) => <button key={value} disabled={saving} aria-pressed={venue === value} onClick={() => {
+        if (venue === value || (dirty && !window.confirm('Abandonner les modifications non enregistrées ?'))) return;
+        setVenue(value); setSection(value === 'casa' ? 'daily-menu' : 'pizzas'); setSelected(null); setDirty(false); setError(''); setNotice('');
+      }}><strong>{label}</strong><small>{city}</small></button>)}</nav>
+      <nav className="admin-sections" aria-label="Rubriques de l’établissement">{(venue === 'casa' ? [['daily-menu', 'Menu du jour'], ['hours', 'Horaires']] as const : [['pizzas', 'Pizzas'], ['hours', 'Horaires']] as const).map(([key, label]) => <button key={key} aria-current={section === key ? 'page' : undefined} disabled={saving} onClick={() => {
         if (key === section || (dirty && !window.confirm('Abandonner les modifications non enregistrées ?'))) return;
-        setDirty(false); setError(''); setNotice(''); setSection(key);
+        setDirty(false); setSelected(null); setError(''); setNotice(''); setSection(key);
       }}>{label}</button>)}</nav>
-      {section === 'hours' ? <>
-        <nav className="admin-sections venue-sections" aria-label="Établissement des horaires">{([['pizza', 'Pizza Maestro · Clermont-Ferrand'], ['casa', 'La Casa di Maestro · Beaumont']] as const).map(([value, label]) => <button key={value} disabled={saving} aria-pressed={hoursVenue === value} onClick={() => { if (hoursVenue !== value && (!dirty || window.confirm('Abandonner les modifications non enregistrées ?'))) { setDirty(false); setHoursVenue(value); } }}>{label}</button>)}</nav>
-        <HoursEditor key={hoursVenue} venue={hoursVenue} csrf={session.csrf} request={request} onDirty={setDirty} onBusy={setSaving} />
-      </> : <>
+      {section === 'hours' ? <HoursEditor key={venue} venue={venue} csrf={session.csrf} request={request} onDirty={setDirty} onBusy={setSaving} /> : section === 'daily-menu' ? <DailyMenuEditor csrf={session.csrf} request={request} onDirty={setDirty} onBusy={setSaving} /> : <>
 
       <div className="page-heading"><div><h1>Vos pizzas</h1><p>{items.length} recettes</p></div><button className="primary" onClick={() => choose(blank)}>+ Ajouter une pizza</button></div>
       {error && <p role="alert" className="error">{error} <button onClick={load}>Réessayer</button></p>}
