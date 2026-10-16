@@ -28,3 +28,8 @@ Le VPS utilise des releases atomiques et shared/config.json + shared/uploads. La
 En cas de perte du mot de passe, un administrateur serveur peut remplacer uniquement le password_hash du compte concerné avec un hash produit par password_hash en PHP. Ne pas rouvrir l'activation ni exposer une route de réinitialisation sans protection. Le changement nécessite un accès privé au serveur ; aucun email de récupération n'est configuré.
 
 Les actualités ne sont pas encore administrables. IONOS : adapter les chemins et vérifier les extensions PHP, les permissions et les règles Apache avant publication. La compatibilité du code PHP/MySQL ne remplace pas un test sur l'offre réelle.
+
+
+## Supprimer une pizza
+
+Ouvrir la fiche puis cliquer « Supprimer la pizza ». La confirmation affiche son nom et permet d'annuler. Après confirmation, la recette est supprimée définitivement de la base et retirée du site. Pour la masquer temporairement, décocher plutôt « Afficher sur la carte ». Les fichiers photo restent conservés pour les sauvegardes ; cette conservation ne restaure pas la recette depuis l'interface.

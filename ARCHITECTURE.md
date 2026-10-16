@@ -147,10 +147,15 @@ Les polices Google Fonts existantes restent externes. Les mesures locales de poi
 
 ## Administration des pizzas — 16 octobre 2026
 
-Route validée : /maestro/administration/. Administration React + TypeScript compilée avec Vite, chargée uniquement à cette adresse. Ajout et modification : nom, ingrédients, tarifs 26/33/40 cm, photo et état publié/brouillon. Pas de suppression définitive : masquer une recette conserve ses données.
+Route validée : /maestro/administration/. Administration React + TypeScript compilée avec Vite, chargée uniquement à cette adresse. Ajout et modification : nom, ingrédients, tarifs 26/33/40 cm, photo et état publié/brouillon. La suppression définitive a été ajoutée à la demande du propriétaire ; voir la décision ci-dessous.
 
 API PHP 8.4, PDO et MySQL 5.7. Sessions serveur, mots de passe hachés, protection CSRF, limite de tentatives de connexion, contrôle de version contre les écrasements simultanés. Premier compte créé avec un code privé à usage unique. Photos validées puis réencodées WebP et stockées dans un dossier persistant.
 
 Les composants React produisent aussi des gabarits privés au build. PHP y insère les données MySQL échappées à chaque consultation : les pizzas changent sans rebuild, toujours sans JavaScript public. Cette décision remplace la limite statique précédente. src/pizzas.json devient uniquement la source d'import initial ; ne pas écraser la base lors d'un déploiement.
 
 Livraison : dist/ vers public/, .build/server/ vers server/ hors racine publique, configuration privée par environnement. Nginx sur VPS et réécriture Apache .htaccess sur IONOS conservent les URL .html. Aucun Node permanent ni Docker obligatoire côté application. Voir ADMINISTRATION.md pour les prérequis ; IONOS reste à tester réellement.
+
+
+## Suppression d'une pizza — 16 octobre 2026
+
+Demande du propriétaire : permettre de supprimer une pizza. Bouton sur une fiche existante, confirmation explicite avec son nom avant suppression définitive en base. L'API vérifie session, CSRF et version de la fiche ; une version périmée est rejetée. La pizza disparaît immédiatement de l'administration et du site. Les photos restent sur disque pour les sauvegardes et les éventuelles références partagées. Aucun changement de schéma ni dépendance supplémentaire.

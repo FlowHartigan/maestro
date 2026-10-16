@@ -101,13 +101,13 @@ function App() {
           {!loading && !filtered.length && <p className="empty">{items.length ? 'Aucune pizza ne correspond à cette recherche.' : 'Ajoutez votre première pizza.'}</p>}
           <ul className="pizza-list">{filtered.map(p => <li key={p.id}><button className={Number(selected?.id) === Number(p.id) ? 'selected' : ''} aria-pressed={Number(selected?.id) === Number(p.id)} onClick={() => choose(p)}><img src={'../' + p.image} alt="" width="64" height="64" loading="lazy" /><span><strong>{p.name}</strong><small>{Number(p.published) ? 'Publiée' : 'Brouillon'} · dès {Number(p.price26).toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}</small></span><span aria-hidden="true">›</span></button></li>)}</ul>
         </section>
-        {selected ? <Editor key={`${selected.id}-${selected.version}`} pizza={selected} csrf={session.csrf} onBusy={setSaving} onDirty={setDirty} onSaved={p => { setItems(prev => prev.some(i => Number(i.id) === Number(p.id)) ? prev.map(i => Number(i.id) === Number(p.id) ? p : i) : [...prev, p]); setSelected(p); setDirty(false); setNotice(Number(p.published) ? 'Pizza enregistrée. La carte du site est à jour.' : 'Brouillon enregistré. Cette pizza reste masquée sur le site.'); }} onCancel={() => { if (!dirty || window.confirm('Annuler les modifications de cette fiche ?')) { setSelected(null); setDirty(false); } }} /> : <section className="empty-editor"><span aria-hidden="true">✦</span><h2>Composez votre carte</h2><p>Choisissez une pizza pour la modifier ou ajoutez une nouvelle recette.</p><button onClick={() => choose(blank)}>Ajouter une pizza</button></section>}
+        {selected ? <Editor key={`${selected.id}-${selected.version}`} pizza={selected} csrf={session.csrf} onBusy={setSaving} onDeleted={id => { setItems(prev => prev.filter(p => Number(p.id) !== id)); setSelected(null); setDirty(false); setNotice("Pizza supprimée. Elle a été retirée de la carte du site."); }} onDirty={setDirty} onSaved={p => { setItems(prev => prev.some(i => Number(i.id) === Number(p.id)) ? prev.map(i => Number(i.id) === Number(p.id) ? p : i) : [...prev, p]); setSelected(p); setDirty(false); setNotice(Number(p.published) ? 'Pizza enregistrée. La carte du site est à jour.' : 'Brouillon enregistré. Cette pizza reste masquée sur le site.'); }} onCancel={() => { if (!dirty || window.confirm('Annuler les modifications de cette fiche ?')) { setSelected(null); setDirty(false); } }} /> : <section className="empty-editor"><span aria-hidden="true">✦</span><h2>Composez votre carte</h2><p>Choisissez une pizza pour la modifier ou ajoutez une nouvelle recette.</p><button onClick={() => choose(blank)}>Ajouter une pizza</button></section>}
       </div>
     </main>
   </>;
 }
 
-function Editor({ pizza, csrf, onBusy, onDirty, onSaved, onCancel }: { pizza: Pizza; csrf: string; onBusy: (busy: boolean) => void; onDirty: (dirty: boolean) => void; onSaved: (pizza: Pizza) => void; onCancel: () => void }) {
+function Editor({ pizza, csrf, onBusy, onDirty, onSaved, onDeleted, onCancel }: { pizza: Pizza; csrf: string; onDeleted: (id: number) => void; onBusy: (busy: boolean) => void; onDirty: (dirty: boolean) => void; onSaved: (pizza: Pizza) => void; onCancel: () => void }) {
   const [draft, setDraft] = useState(pizza);
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState(pizza.image ? '../' + pizza.image : '');
@@ -125,6 +125,15 @@ function Editor({ pizza, csrf, onBusy, onDirty, onSaved, onCancel }: { pizza: Pi
     if (!value) return;
     if (!['image/jpeg', 'image/png', 'image/webp'].includes(value.type) || value.size > 6 * 1024 * 1024) { setError('Choisissez une photo JPG, PNG ou WebP de moins de 6 Mo.'); if (fileInput.current) fileInput.current.value = ''; return; }
     setFile(value); setError(''); setModified(true); onDirty(true);
+  }
+  async function remove() {
+    if (!window.confirm(`Supprimer définitivement la pizza « ${pizza.name} » ? Elle sera retirée du site. Cette action est irréversible.`)) return;
+    setBusy(true); onBusy(true); setError('');
+    try {
+      await request('delete', { id: pizza.id, version: pizza.version }, csrf);
+      onDeleted(Number(pizza.id));
+    } catch (e) { setError((e as Error).message); }
+    finally { setBusy(false); onBusy(false); }
   }
   async function save(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); setBusy(true); onBusy(true); setError('');
@@ -147,7 +156,7 @@ function Editor({ pizza, csrf, onBusy, onDirty, onSaved, onCancel }: { pizza: Pi
       <label className="toggle"><input type="checkbox" checked={Number(draft.published) === 1} onChange={e => change('published', e.target.checked ? 1 : 0)} /><span><strong>Afficher sur la carte</strong><small>Décochez pour conserver cette pizza en brouillon.</small></span></label>
     </fieldset>
     {error && <p className="error" role="alert">{error}</p>}
-    <div className="form-actions"><button type="button" disabled={busy} onClick={onCancel}>Annuler</button><button className="primary" disabled={busy || !modified}>{busy ? 'Enregistrement…' : 'Enregistrer la pizza'}</button></div>
+    <div className="form-actions">{pizza.id > 0 && <button className="danger" type="button" disabled={busy} onClick={remove}>Supprimer la pizza</button>}<button type="button" disabled={busy} onClick={onCancel}>Annuler</button><button className="primary" disabled={busy || !modified}>{busy ? 'Enregistrement…' : 'Enregistrer la pizza'}</button></div>
   </form></section>;
 }
 

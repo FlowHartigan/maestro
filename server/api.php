@@ -42,6 +42,18 @@ try {
     }
     requireUser();
     if ($action === 'logout') { $_SESSION = []; session_destroy(); respond(['ok' => true]); }
+    if ($action === 'delete') {
+        $id = filter_var($data['id'] ?? null, FILTER_VALIDATE_INT);
+        $version = filter_var($data['version'] ?? null, FILTER_VALIDATE_INT);
+        if (!$id || $id < 1 || !$version || $version < 1) fail('Pizza invalide.', 422);
+        $statement = query('DELETE FROM pizzas WHERE id = ? AND version = ?', [$id, $version]);
+        if ($statement->rowCount() !== 1) {
+            if (!query('SELECT id FROM pizzas WHERE id = ?', [$id])->fetch()) fail('Pizza introuvable ou déjà supprimée.', 404);
+            fail('Cette pizza a été modifiée ailleurs. Rechargez sa fiche avant de la supprimer.', 409);
+        }
+        // Keep media files for backups and any other records referencing them.
+        respond(['ok' => true, 'id' => $id]);
+    }
     if ($action !== 'save') fail('Action inconnue.', 404);
     $values = pizzaInput($data);
     $id = filter_var($data['id'] ?? 0, FILTER_VALIDATE_INT);

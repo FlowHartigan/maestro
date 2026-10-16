@@ -104,3 +104,7 @@ La livraison React publie uniquement dist/ (trois HTML et assets avec empreintes
 Vérifications : typecheck/build et 5 tests de build réussis ; syntaxe PHP 8.4 et nginx -t valides. Tests API sur une base isolée : activation unique, authentification, CSRF, validation de données et images, brouillons/publication, échappement XSS, conflits de version, persistance et déconnexion. Modification par formulaire vérifiée dans le navigateur. Après publication : 38 photos servies, ressources admin disponibles, configuration et sources privées inaccessibles, API privée 401 sans session, cookie Secure/HttpOnly/SameSite Strict au chemin /maestro/. Accueil mariage inchangé et santé API OK. IONOS non déployé.
 
 Contrôle visuel du formulaire à 390 et 768 px : champs, prix et photo accessibles, disposition empilée sans débordement horizontal visible.
+
+## Suppression des pizzas — 16 octobre 2026
+
+Release active : delete-20261016-211322. Bouton de suppression avec confirmation, authentification/CSRF et contrôle de version. Aucun changement de schéma. Sauvegarde : /var/backups/maestro/delete-20261016-211322. Typecheck, build, 5 tests de build et tests API isolés de suppression réussis (401 sans connexion, 403 sans CSRF, 409 si version périmée, retrait public, 404 après suppression). Carte publique et accueil mariage identiques avant/après publication.

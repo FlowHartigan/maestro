@@ -22,6 +22,7 @@ def call(action,data=None,status=200,send_csrf=True,files=None):
     return json.loads(body)
 session=call('session');csrf=session['csrf'];assert session['setupRequired']
 call('pizzas',status=401)
+call('delete',{'id':1,'version':1},status=401)
 call('setup',{'username':'integration-admin','password':'Maestro-Integration-2026!','token':token},status=403,send_csrf=False)
 session=call('setup',{'username':'integration-admin','password':'Maestro-Integration-2026!','token':token});csrf=session['csrf']
 call('setup',{'username':'second-admin','password':'Maestro-Integration-2026!','token':token},status=403)
@@ -49,5 +50,15 @@ call('pizzas',status=401)
 call('login',{'username':'integration-admin','password':'wrong'},status=401)
 session=call('login',{'username':'integration-admin','password':'Maestro-Integration-2026!'});csrf=session['csrf']
 assert len(call('pizzas')['pizzas'])==39
+call('delete',{'id':saved['id'],'version':saved['version']},status=403,send_csrf=False)
+call('delete',{'id':saved['id'],'version':saved['version']-1},status=409)
+call('delete',{'id':0,'version':1},status=422)
+assert len(call('pizzas')['pizzas'])==39
+call('delete',{'id':saved['id'],'version':saved['version']})
+assert len(call('pizzas')['pizzas'])==38
+assert not any(p['id']==saved['id'] for p in call('pizzas')['pizzas'])
+assert 'Test &lt;script&gt;' not in client.open(base+'/menu.html').read().decode()
+call('delete',{'id':saved['id'],'version':saved['version']},status=404)
+call('save',saved,status=404)
 call('logout',{})
-print('PASS: setup once, auth, CSRF, invalid data, upload validation, draft, publication, XSS escaping, updates, conflict, persistence, logout/login')
+print('PASS: setup once, auth, CSRF, invalid data, upload validation, draft, publication, XSS escaping, updates, conflict, persistence, logout/login, protected deletion, stale version, removal from public site')
