@@ -14,3 +14,7 @@ Cette livraison porte sur la présentation des trois pages publiques. Elle conse
 ## Vérifications
 
 Les 38 noms et les 114 valeurs de prix sont identiques à la version précédente. Toutes les références locales des trois pages existent avec leur casse exacte. Affichages contrôlés dans le navigateur à 1265 px et dans des cadres de 390 px (carte) et 768 px (contact). Liens de navigation, de téléphone, de livraison et de courriel conservés ; courriel de contact corrigé pour utiliser réellement pizza.maestro@yahoo.com.
+
+## Mise en avant Don Scata
+
+Bandeau orange à motifs placé après la section de présentation. Pizza détourée générée avec imagegen à partir de la photo Maestro `images/pizza/don-scata.jpg`, avec conservation de la garniture et de l’œuf central. Le visuel illustratif est dans `images/pizzeria/don-scata-feature.png` ; la photo originale reste sur la carte. Motif issu de la démo Pizzeria. Tarifs conservés : 26 cm 11,50 €, 33 cm 13,70 €, 40 cm 17,10 €. Bouton vers les contacts pour choisir sa pizzeria. Une seule pizza mise en avant : pas de commandes de carrousel sans fonction.
