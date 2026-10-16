@@ -18,3 +18,7 @@ Les 38 noms et les 114 valeurs de prix sont identiques à la version précédent
 ## Mise en avant Don Scata
 
 Bandeau orange à motifs placé après la section de présentation. Pizza détourée générée avec imagegen à partir de la photo Maestro `images/pizza/don-scata.jpg`, avec conservation de la garniture et de l’œuf central. Le visuel illustratif est dans `images/pizzeria/don-scata-feature.png` ; la photo originale reste sur la carte. Motif issu de la démo Pizzeria. Tarifs conservés : 26 cm 11,50 €, 33 cm 13,70 €, 40 cm 17,10 €. Bouton vers les contacts pour choisir sa pizzeria. Une seule pizza mise en avant : pas de commandes de carrousel sans fonction.
+
+## Fond Fenati
+
+Le fond d’accueil `images/pizzeria/hero-fenati.png` a été régénéré avec imagegen depuis la composition sur ardoise du template et la vraie photo `images/pizza/fenati.JPG`. La garniture reprend la recette Fenati. Le texte reste en HTML, le voile de contraste en CSS. Le préchargement et le fond CSS pointent vers le même nouveau fichier.
