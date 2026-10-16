@@ -87,3 +87,11 @@ Mémoire du projet créée le 16 octobre 2026. Lire ce fichier avant toute inter
 - Conséquence : une réponse du site par défaut a fait échouer le contrôle et déclenché le retour arrière ; le nouveau journal Maestro était encore vide.
 - Correction : répéter les contrôles de façon bornée jusqu'à obtenir le contenu Maestro attendu ; pages et certificat ensuite vérifiés.
 - Prévention : après un rechargement progressif, vérifier le contenu attendu et le certificat avec quelques tentatives limitées, sans désactiver la validation TLS ni se contenter d'un HTTP 200 provenant d'une autre application.
+
+
+### 2026-10-16 — Casse des images et vérification incomplète au déploiement
+
+- Erreur : publier les pages sans vérifier chaque photo de pizza. Les références `.JPG` ne correspondaient pas toujours aux fichiers `.jpg`, et `Escari.JPG` différait de `escari.jpg`.
+- Conséquence : photos absentes sous Linux, malgré un site accessible et un logo correct. Les requêtes vers les mauvais chemins renvoyaient 404.
+- Correction : aligner les références des pages accueil et pizzas sur les noms exacts versionnés, puis vérifier toutes les photos par HTTP après publication.
+- Prévention : contrôler les noms avec une comparaison sensible à la casse, même depuis Windows. Une page HTTP 200 et un contrôle du logo ne suffisent pas à valider ses ressources ; vérifier aussi les images de fond CSS.
