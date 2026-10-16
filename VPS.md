@@ -80,3 +80,7 @@ Choisir le domaine de test, préparer DNS/HTTPS et protection d'accès, ajouter 
 ## Correction des photos — 16 octobre 2026
 
 Version active : `74b867e2a31e`, dossier `/var/www/maestro/releases/74b867e2a31e/public`. Les chemins de 26 photos ont été corrigés dans chacune des deux pages `index.html` et `menu.html` pour respecter la casse des fichiers Linux. Les 38 images de pizzas référencées ont été contrôlées en HTTPS : HTTP 200 et type image. Les deux pages publiées correspondent aux sources corrigées. Version précédente conservée pour retour arrière : `1306793fd85e`.
+
+## Adaptation Pizzeria — 16 octobre 2026
+
+Version publique active : `838adba009f9`, dans `/var/www/maestro/releases/838adba009f9/public`. Accueil, carte et contact utilisent la direction du template choisi. Ancienne version conservée : `74b867e2a31e`. Contrôles HTTPS : trois pages identiques aux sources, 42 images accessibles (38 pizzas, logo et trois médias du template), CSS accessible, accueil mariage inchangé et API saine. Contrôle visuel navigateur effectué ; aucune erreur dans les journaux console consultés. Aucune modification Nginx ou base de données.
