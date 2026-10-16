@@ -76,3 +76,7 @@ Choisir le domaine de test, préparer DNS/HTTPS et protection d'accès, ajouter 
 - Contrôles : les trois pages contiennent bien Maestro, CSS/JS/logo accessibles, affichage navigateur HTTPS confirmé ; empreinte HTML de l'accueil mariage identique avant/après et API saine.
 - Sauvegardes Nginx dans `/var/backups/maestro/`, dont `route-20261016-195123` avant l'ajout du préfixe. Ne pas restaurer aveuglément un fichier complet sans vérifier les changements ultérieurs.
 - Lire `deploy/README.md` avant les mises à jour et adapter la configuration lors de l'arrivée du backend PHP et de l'administration.
+
+## Correction des photos — 16 octobre 2026
+
+Version active : `74b867e2a31e`, dossier `/var/www/maestro/releases/74b867e2a31e/public`. Les chemins de 26 photos ont été corrigés dans chacune des deux pages `index.html` et `menu.html` pour respecter la casse des fichiers Linux. Les 38 images de pizzas référencées ont été contrôlées en HTTPS : HTTP 200 et type image. Les deux pages publiées correspondent aux sources corrigées. Version précédente conservée pour retour arrière : `1306793fd85e`.
