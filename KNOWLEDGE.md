@@ -95,3 +95,10 @@ Mémoire du projet créée le 16 octobre 2026. Lire ce fichier avant toute inter
 - Conséquence : photos absentes sous Linux, malgré un site accessible et un logo correct. Les requêtes vers les mauvais chemins renvoyaient 404.
 - Correction : aligner les références des pages accueil et pizzas sur les noms exacts versionnés, puis vérifier toutes les photos par HTTP après publication.
 - Prévention : contrôler les noms avec une comparaison sensible à la casse, même depuis Windows. Une page HTTP 200 et un contrôle du logo ne suffisent pas à valider ses ressources ; vérifier aussi les images de fond CSS.
+
+### 2026-10-16 — Lecture DOM des cadres de prévisualisation
+
+- Erreur : tenter de lire contentDocument des iframes dans la portée DOM limitée du navigateur intégré.
+- Conséquence : mesure automatique des débordements indisponible via cette méthode.
+- Correction : contrôle visuel des cadres mobile et tablette, puis inspection directe de la page principale.
+- Prévention : utiliser uniquement les capacités DOM exposées et distinguer contrôle visuel et mesure automatique.

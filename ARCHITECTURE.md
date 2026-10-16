@@ -128,3 +128,8 @@ Docker est autorisé pour fournir cet environnement de test ; il ne doit pas dev
 ## Adresse de test — décision du 16 octobre 2026
 
 La prévisualisation est publiée sous `https://dms-app.fr/maestro/`. L'application mariage reste à la racine et conserve son API `/api/`. Les prochaines évolutions doivent gérer ce préfixe pour les liens, ressources, routes React, API et cookies tout en conservant une base d'URL configurable pour IONOS. Voir `VPS.md` et `deploy/README.md` pour l'état réel du déploiement.
+
+
+## Direction graphique — 16 octobre 2026
+
+Le propriétaire choisit le template Pizzeria #78480 de TemplateMonster et demande de récupérer les fichiers publics de sa démo. Adaptation sur v2 des pages accueil, carte et contact, avec les contenus Maestro et les URL existantes. Voir TEMPLATE.md pour la provenance, la palette et le périmètre. Ce choix remplace la piste graphique proposée auparavant et ne change pas la cible PHP/React/MySQL.
