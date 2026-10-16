@@ -105,3 +105,8 @@ Décision du propriétaire du 16 octobre 2026 :
 - Ne pas modifier `v1` ni déplacer le tag `v1.0.0`.
 - Avant toute modification, vérifier que la branche active est `v2`. Si une branche de travail est nécessaire, la créer depuis `v2` et cibler `v2` pour son intégration.
 - Ne pas intégrer les évolutions à `main` sans nouvelle instruction du propriétaire.
+
+
+## Interventions sur le VPS
+
+Lire `VPS.md` avant toute intervention serveur : il décrit les accès non secrets, les services constatés, la base Maestro et les contrôles déjà effectués. Préserver le site mariage et ses services. Ne pas exposer les fichiers de configuration contenant les secrets.
