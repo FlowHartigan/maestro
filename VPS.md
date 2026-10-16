@@ -1,47 +1,64 @@
 # VPS de test Maestro
 
-État vérifié le 16 octobre 2026. Ce document décrit les services installés ; le site Maestro n'est pas encore déployé.
+État au 16 octobre 2026. Le serveur est préparé ; le site Maestro n'est pas encore publié.
 
-## Accès
+## Accès et services existants
 
-- Hôte : `vps-328a8329.vps.ovh.ca`.
-- Utilisateur SSH : `ubuntu`.
-- Clé locale fonctionnelle : `C:\Users\flori\.ssh\festi-app-vps` ; ne jamais copier son contenu dans le dépôt.
-- Utiliser cette clé explicitement avec `ssh -i` ; l'agent SSH local n'était pas disponible pendant la vérification.
+- Hôte : `vps-328a8329.vps.ovh.ca`, utilisateur SSH `ubuntu`.
+- Clé locale : `C:\Users\flori\.ssh\festi-app-vps`, à utiliser explicitement avec `ssh -i`. Ne jamais versionner son contenu.
+- Ubuntu 26.04 LTS et Nginx.
+- Site mariage : service `festi-app`, API sur `127.0.0.1:3001`, domaine `dms-app.fr`. Préserver ses fichiers, données et configuration Nginx.
 
-## Configuration constatée
+## Versions imposées pour Maestro
 
-- Ubuntu 26.04 LTS.
-- Nginx déjà présent et actif.
-- Application mariage existante : service `festi-app`, écoute sur `127.0.0.1:3001`, site Nginx `festi-app`, domaine `dms-app.fr`.
-- Ne pas remplacer sa configuration ni utiliser ses répertoires ou données pour Maestro.
+Le propriétaire a demandé PHP **8.4** et MySQL **5.7**. Les services natifs PHP 8.5 et MySQL 8.4 installés initialement ne constituent plus l'environnement actif de Maestro.
 
-## Installation réalisée
+Ces versions sont exécutées dans des conteneurs sur le VPS Ubuntu 26.04. Docker est un outil de cet environnement de test ; le code doit rester déployable directement sur PHP/MySQL chez IONOS, sans dépendance applicative à Docker.
 
-Paquets installés depuis les dépôts Ubuntu : `php-fpm`, `php-cli`, `php-mysql`, `php-mbstring`, `php-xml`, `php-curl`, `php-gd`, `php-zip`, `mysql-server`, `unzip`.
+| Composant | Configuration active |
+| --- | --- |
+| PHP | 8.4.26, conteneur `maestro-php84`, image locale `maestro-php:8.4`. |
+| PHP-FPM | Port du VPS `127.0.0.1:9084` vers le port 9000 du conteneur. |
+| MySQL | 5.7.44, conteneur `maestro-mysql57`, image officielle `mysql:5.7.44`. |
+| Réseau Docker | `maestro-test`, communication PHP/MySQL par le nom `maestro-mysql57`. |
+| Stockage MySQL | Volume persistant `maestro-mysql57-data`. |
+| Redémarrage | Docker activé au démarrage, conteneurs avec `unless-stopped`. |
 
-- PHP installé : 8.5.4 ; service `php8.5-fpm` actif et activé au démarrage.
-- Socket FPM : `/run/php/php8.5-fpm.sock`.
-- MySQL installé : 8.4.11 ; service `mysql` actif et activé au démarrage.
-- MySQL écoute sur `127.0.0.1:3306`, protocole X sur `127.0.0.1:33060` ; aucun accès réseau distant configuré.
-- Base dédiée : `maestro_test`, encodage `utf8mb4`, collation `utf8mb4_unicode_ci`.
-- Compte applicatif : `maestro_app@localhost`, droits SELECT, INSERT, UPDATE et DELETE uniquement sur `maestro_test`.
-- Mot de passe aléatoire conservé uniquement dans `/etc/maestro/database.json`, fichier root `0600`, dossier `0700`. Ne pas afficher son contenu ni le versionner.
-- Les migrations devront être exécutées séparément avec des droits adaptés. Le compte applicatif ne peut pas créer les tables.
-- La configuration root-only n'est pas encore accessible à un processus applicatif : prévoir un utilisateur/pool PHP Maestro et une configuration lisible uniquement par cet utilisateur lors du déploiement.
+MySQL ne publie aucun port sur le VPS ni sur Internet. Le port FastCGI reste limité à la boucle locale et sera utilisé par le futur site Nginx Maestro.
 
-## Contrôles réalisés
+## Configuration et secrets
 
-- `nginx -t` et `php-fpm8.5 -t` : réussis.
-- Exécution FastCGI sur le socket FPM : réponse PHP 8.5.4 et extension `pdo_mysql` disponible. Le fichier temporaire de test a été supprimé.
-- Connexion PHP PDO avec le compte applicatif à `maestro_test` : réussie.
-- Services Nginx, PHP-FPM, MySQL et `festi-app` : actifs.
-- API existante `/api/health` : `status=ok`.
-- Site mariage via Nginx en HTTPS local, avec vérification du certificat : HTTP 200.
-- Aucun site Maestro ni règle Nginx Maestro ajouté ; aucun rechargement Nginx nécessaire.
+- Base : `maestro_test`, `utf8mb4`, collation `utf8mb4_unicode_ci`.
+- Compte applicatif : `maestro_app`, droits SELECT, INSERT, UPDATE et DELETE sur cette seule base ; migrations à exécuter avec un compte adapté séparé.
+- Configuration de connexion : `/etc/maestro/database.json`, root uniquement. Copie en lecture seule dans le conteneur PHP à `/run/secrets/maestro-database.json`.
+- Secrets MySQL dans `/etc/maestro/runtime-secrets`, utilisés comme fichiers montés en lecture seule ; ne jamais afficher ni versionner leur contenu.
+- La configuration PHP reste root-only : une configuration lisible par le futur processus applicatif doit être préparée au déploiement, sans élargir publiquement les permissions.
+- Répertoire applicatif réservé : `/var/www/maestro`, monté en lecture seule dans PHP au même chemin. Prévoir un montage d'écriture dédié aux médias lors de l'implémentation.
+- Dockerfile de PHP et script de préparation : `/opt/maestro-runtime`. Le script de préparation ne doit pas être relancé aveuglément : il refuse les conteneurs déjà existants.
+- Image PHP de base épinglée : `php:8.4-fpm-bookworm@sha256:6bfef8e416977aa41f48e3e42a40c1e08050d24e4a938c6edb421400bff24601`.
+- Image MySQL épinglée : `mysql:5.7.44@sha256:4bc6bc963e6d8443453676cae56536f4b8156d78bae03c0145cbe47c2aad73bb`.
 
-## Portabilité et suite
+## Vérifications de la bascule
 
-Respecter `ARCHITECTURE.md` : PHP 8.5 et MySQL 8.4 du VPS ne changent pas la cible MySQL 5.7 d'IONOS. La version PHP IONOS reste à confirmer. La compatibilité avec IONOS n'a pas encore été testée.
+- La base Maestro native ne contenait aucune table ; configuration et export sauvegardés dans `/etc/maestro/before-php84-mysql57`.
+- PHP 8.4 : extensions `pdo_mysql`, `mbstring`, `gd`, `zip`, `intl`, OPcache, cURL et XML disponibles.
+- Connexion PHP 8.4 vers MySQL 5.7.44 avec le compte applicatif et requête préparée : réussies.
+- Exécution FastCGI sur `127.0.0.1:9084` : PHP 8.4.26 ; fichier temporaire supprimé après le contrôle.
+- Anciens services natifs `php8.5-fpm` et `mysql` arrêtés et désactivés après les tests. Leurs paquets et les anciennes données restent présents pour retour arrière ; les commandes PHP/MySQL natives ne désignent pas les versions des conteneurs.
+- Nginx : configuration validée ; site mariage HTTPS HTTP 200 et API saine après bascule.
+- Aucun site Nginx Maestro n'est encore ajouté.
 
-Avant publication : choisir le domaine de test, prévoir sa configuration DNS/HTTPS et sa protection d'accès, préparer le pool PHP et les répertoires dédiés, déployer la branche `v2`, appliquer les migrations, puis vérifier les parcours du site.
+## Commandes de contrôle
+
+```sh
+sudo docker ps
+sudo docker exec maestro-php84 php -v
+sudo docker exec maestro-php84 php-fpm -t
+sudo docker exec maestro-mysql57 mysql --defaults-extra-file=/run/secrets/mysql-root.cnf -e 'SELECT VERSION();'
+```
+
+Ne jamais afficher `docker inspect` sans filtrer les champs ni lire les fichiers de secrets dans une sortie partagée.
+
+## Suite
+
+Choisir le domaine de test, préparer DNS/HTTPS et protection d'accès, ajouter un site Nginx Maestro indépendant, préparer les permissions des configurations et médias, déployer `v2` et ses migrations puis vérifier les parcours. Les versions et paramètres effectifs IONOS restent à contrôler ; la parité des versions ne prouve pas à elle seule le fonctionnement complet sur IONOS.

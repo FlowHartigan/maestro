@@ -89,7 +89,7 @@ Ces éléments sont des propositions de conception, pas un cahier des charges d�
 
 ## Points ouverts
 
-- Version PHP active et versions disponibles dans le contrat IONOS. La capture ne les montre pas. Cible souhaitée : PHP 8.4 ou supérieure maintenue, sous réserve de disponibilité et de compatibilité.
+- Version PHP active et versions disponibles dans le contrat IONOS. La capture ne les montre pas. Version demandée : PHP 8.4. Vérifier sa disponibilité dans le contrat IONOS.
 - Extensions PHP et possibilités de configuration du mutualisé.
 - Carte et tarifs identiques ou différents entre Clermont-Ferrand et Chamalières.
 - Canal de commande : téléphone, plateforme externe ou prise de commande sur le site. Aucun panier ni paiement en ligne n'a été validé.
@@ -115,4 +115,11 @@ Décision du 16 octobre 2026 : le site initial est conservé dans la branche `v1
 
 ## Installation du VPS — 16 octobre 2026
 
-Le VPS a été inspecté et préparé : Ubuntu 26.04, Nginx existant, PHP-FPM 8.5.4 et MySQL 8.4.11 installés, base `maestro_test` et compte applicatif local dédiés. Les contrôles PHP-FPM, PDO/MySQL et du site existant ont réussi. Voir `VPS.md` pour les détails et les opérations restantes. Maestro ne dispose pas encore de site Nginx ni de déploiement applicatif. La cible IONOS reste inchangée.
+Installation initiale : PHP-FPM 8.5.4 et MySQL 8.4.11. Ces versions ont ensuite été remplacées pour Maestro par PHP 8.4 et MySQL 5.7 à la demande du propriétaire ; les anciens services sont arrêtés. Voir `VPS.md` pour les détails et les opérations restantes. Maestro ne dispose pas encore de site Nginx ni de déploiement applicatif. La cible IONOS reste inchangée.
+
+
+## Versions exactes de test — décision du 16 octobre 2026
+
+Le propriétaire impose PHP 8.4 et MySQL 5.7 sur le VPS. Environnement actif : PHP 8.4.26 et MySQL 5.7.44 en conteneurs dédiés, car ces deux branches ne sont pas proposées par les dépôts standards du VPS Ubuntu 26.04. Les services natifs PHP 8.5 et MySQL 8.4 précédemment installés sont arrêtés et désactivés.
+
+Docker est autorisé pour fournir cet environnement de test ; il ne doit pas devenir une dépendance du code ni une exigence pour le mutualisé IONOS. La même application doit fonctionner directement sur PHP 8.4/MySQL 5.7 chez IONOS. Voir `VPS.md` pour les accès, ports, volumes, contrôles et limites actuelles.

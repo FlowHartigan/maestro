@@ -63,3 +63,19 @@ Mémoire du projet créée le 16 octobre 2026. Lire ce fichier avant toute inter
 - Conséquence :
 - Correction :
 - Prévention :
+
+
+### 2026-10-16 — Versions de test différentes de la cible attendue
+
+- Erreur : installer PHP 8.5 et MySQL 8.4 fournis par Ubuntu pour préparer les tests, alors que le propriétaire attendait la parité PHP 8.4/MySQL 5.7.
+- Conséquence : environnement insuffisamment représentatif ; une nouvelle installation a été nécessaire.
+- Correction : environnement dédié PHP 8.4.26/MySQL 5.7.44, connexion PDO et FastCGI vérifiées, anciens services arrêtés et site existant contrôlé.
+- Prévention : respecter les versions exactes demandées. La compatibilité supposée avec une version récente ne remplace pas un test sur la version cible ; distinguer les versions natives du serveur et celles exécutant l'application.
+
+
+### 2026-10-16 — Contrôle MySQL avec un transport non autorisé
+
+- Erreur : vérifier MySQL 5.7 en TCP avec `root@localhost`, alors que ce compte est limité au socket local.
+- Conséquence : refus d'authentification dans la boucle de disponibilité malgré un serveur démarré.
+- Correction : contrôle administrateur via le socket, puis test réseau PHP/PDO avec le compte applicatif ; requête réussie sur MySQL 5.7.44.
+- Prévention : distinguer le transport, l'hôte autorisé du compte et le mot de passe ; ne pas élargir les droits root pour contourner un contrôle erroné. Attendre la fin de l'initialisation avant les opérations applicatives.
