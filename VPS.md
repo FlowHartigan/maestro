@@ -112,3 +112,7 @@ Release active : delete-20261016-211322. Bouton de suppression avec confirmation
 ## Visuel par défaut — 16 octobre 2026
 
 Release active : default-20261016-211852. Les nouvelles pizzas sans photo utilisent le visuel Maestro de la Rossi, copié dans shared/uploads. Les recettes existantes restent inchangées. Création sans photo et accès WebP vérifiés en environnement isolé ; aperçu fourni par l’API publique de session. Typecheck/build/5 tests et tests API réussis. Après bascule, rechargement gracieux de PHP-FPM pour vider le cache des chemins de current. Carte publique et mariage identiques après déploiement.
+
+## Publication automatique — 16 octobre 2026
+
+Release active : auto-20261016-212326. Case de visibilité retirée ; chaque futur enregistrement impose published=1 côté API. Aucun changement des recettes existantes ni de leur visibilité au déploiement. Cache PHP actualisé par rechargement gracieux. Tests typecheck/build/5 tests et parcours API isolé réussis, y compris sans champ published et avec ancien client envoyant 0. Carte publique et mariage identiques avant/après.

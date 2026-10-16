@@ -60,8 +60,8 @@ function pizzaInput(array $data): array {
         if (!preg_match('/^\d{1,3}(\.\d{1,2})?$/D', $value) || (float)$value <= 0 || (float)$value > 999) fail('Chaque tarif doit être compris entre 0,01 et 999 € avec deux décimales au maximum.', 422);
         $prices[] = number_format((float)$value, 2, '.', '');
     }
-    if (!in_array($data['published'] ?? null, ['0', '1', 0, 1], true)) fail('Statut de publication invalide.', 422);
-    return [$name, $ingredients, ...$prices, (int)$data['published']];
+    // Every saved pizza is public; clients cannot create hidden drafts.
+    return [$name, $ingredients, ...$prices, 1];
 }
 function uploadPhoto(): ?string {
     $file = $_FILES['photo'] ?? null;

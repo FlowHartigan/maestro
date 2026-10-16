@@ -4,7 +4,7 @@ import './style.css';
 
 type Pizza = { id: number; name: string; ingredients: string; price26: string; price33: string; price40: string; image: string; published: number; version: number };
 type Session = { user: { username: string } | null; csrf: string; setupRequired?: boolean; defaultImage?: string };
-const blank: Pizza = { id: 0, name: '', ingredients: '', price26: '', price33: '', price40: '', image: '', published: 0, version: 0 };
+const blank: Pizza = { id: 0, name: '', ingredients: '', price26: '', price33: '', price40: '', image: '', published: 1, version: 0 };
 const apiURL = '../api/index.php';
 
 async function request(action: string, body?: FormData | object, csrf?: string) {
@@ -93,16 +93,16 @@ function App() {
   return <>
     <header className="topbar"><a className="brand" href="../">Maestro</a><span>Administration</span><div className="top-actions"><a href="../menu.html" target="_blank" rel="noreferrer">Voir la carte ↗</a><button onClick={logout}>Se déconnecter</button></div></header>
     <main className="workspace">
-      <div className="page-heading"><div><h1>Vos pizzas</h1><p>{items.length} recettes · {items.filter(p => Number(p.published) === 1).length} sur la carte</p></div><button className="primary" onClick={() => choose(blank)}>+ Ajouter une pizza</button></div>
+      <div className="page-heading"><div><h1>Vos pizzas</h1><p>{items.length} recettes</p></div><button className="primary" onClick={() => choose(blank)}>+ Ajouter une pizza</button></div>
       {error && <p role="alert" className="error">{error} <button onClick={load}>Réessayer</button></p>}
       {notice && <p role="status" className="success">{notice}</p>}
       <div className="editor-layout">
         <section className="list-panel" aria-label="Liste des pizzas"><label className="search">Rechercher une pizza<input type="search" value={query} onChange={e => setQuery(e.target.value)} placeholder="Nom ou ingrédient" /></label>
           {loading && <p role="status">Chargement des pizzas…</p>}
           {!loading && !filtered.length && <p className="empty">{items.length ? 'Aucune pizza ne correspond à cette recherche.' : 'Ajoutez votre première pizza.'}</p>}
-          <ul className="pizza-list">{filtered.map(p => <li key={p.id}><button className={Number(selected?.id) === Number(p.id) ? 'selected' : ''} aria-pressed={Number(selected?.id) === Number(p.id)} onClick={() => choose(p)}><img src={'../' + p.image} alt="" width="64" height="64" loading="lazy" /><span><strong>{p.name}</strong><small>{Number(p.published) ? 'Publiée' : 'Brouillon'} · dès {Number(p.price26).toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}</small></span><span aria-hidden="true">›</span></button></li>)}</ul>
+          <ul className="pizza-list">{filtered.map(p => <li key={p.id}><button className={Number(selected?.id) === Number(p.id) ? 'selected' : ''} aria-pressed={Number(selected?.id) === Number(p.id)} onClick={() => choose(p)}><img src={'../' + p.image} alt="" width="64" height="64" loading="lazy" /><span><strong>{p.name}</strong><small>Dès {Number(p.price26).toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}</small></span><span aria-hidden="true">›</span></button></li>)}</ul>
         </section>
-        {selected ? <Editor key={`${selected.id}-${selected.version}`} pizza={selected} csrf={session.csrf} onBusy={setSaving} onDeleted={id => { setItems(prev => prev.filter(p => Number(p.id) !== id)); setSelected(null); setDirty(false); setNotice("Pizza supprimée. Elle a été retirée de la carte du site."); }} onDirty={setDirty} onSaved={p => { setItems(prev => prev.some(i => Number(i.id) === Number(p.id)) ? prev.map(i => Number(i.id) === Number(p.id) ? p : i) : [...prev, p]); setSelected(p); setDirty(false); setNotice(Number(p.published) ? 'Pizza enregistrée. La carte du site est à jour.' : 'Brouillon enregistré. Cette pizza reste masquée sur le site.'); }} onCancel={() => { if (!dirty || window.confirm('Annuler les modifications de cette fiche ?')) { setSelected(null); setDirty(false); } }} /> : <section className="empty-editor"><span aria-hidden="true">✦</span><h2>Composez votre carte</h2><p>Choisissez une pizza pour la modifier ou ajoutez une nouvelle recette.</p><button onClick={() => choose(blank)}>Ajouter une pizza</button></section>}
+        {selected ? <Editor key={`${selected.id}-${selected.version}`} pizza={selected} csrf={session.csrf} onBusy={setSaving} onDeleted={id => { setItems(prev => prev.filter(p => Number(p.id) !== id)); setSelected(null); setDirty(false); setNotice("Pizza supprimée. Elle a été retirée de la carte du site."); }} onDirty={setDirty} onSaved={p => { setItems(prev => prev.some(i => Number(i.id) === Number(p.id)) ? prev.map(i => Number(i.id) === Number(p.id) ? p : i) : [...prev, p]); setSelected(p); setDirty(false); setNotice('Pizza enregistrée. La carte du site est à jour.'); }} onCancel={() => { if (!dirty || window.confirm('Annuler les modifications de cette fiche ?')) { setSelected(null); setDirty(false); } }} /> : <section className="empty-editor"><span aria-hidden="true">✦</span><h2>Composez votre carte</h2><p>Choisissez une pizza pour la modifier ou ajoutez une nouvelle recette.</p><button onClick={() => choose(blank)}>Ajouter une pizza</button></section>}
       </div>
     </main>
   </>;
@@ -114,7 +114,7 @@ function Editor({ pizza, csrf, onBusy, onDirty, onSaved, onDeleted, onCancel }: 
   const [preview, setPreview] = useState(pizza.image ? '../' + pizza.image : '');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
-  const [modified, setModified] = useState(!pizza.id);
+  const [modified, setModified] = useState(!pizza.id || Number(pizza.published) !== 1);
   const fileInput = useRef<HTMLInputElement>(null);
   useEffect(() => {
     if (!file) return;
@@ -154,7 +154,6 @@ function Editor({ pizza, csrf, onBusy, onDirty, onSaved, onDeleted, onCancel }: 
       <label>Ingrédients<textarea value={draft.ingredients} onChange={e => change('ingredients', e.target.value)} required maxLength={1000} rows={4} placeholder="Mozzarella, tomates, basilic…" /></label>
       <div className="prices"><label>26 cm · €<input type="number" inputMode="decimal" min="0.01" max="999" step="0.01" required value={draft.price26} onChange={e => change('price26', e.target.value)} /></label><label>33 cm · €<input type="number" inputMode="decimal" min="0.01" max="999" step="0.01" required value={draft.price33} onChange={e => change('price33', e.target.value)} /></label><label>40 cm · €<input type="number" inputMode="decimal" min="0.01" max="999" step="0.01" required value={draft.price40} onChange={e => change('price40', e.target.value)} /></label></div>
       <div className="photo-field"><div className="photo-preview">{preview ? <img src={preview} alt="Aperçu de la pizza" /> : <span>Votre photo apparaîtra ici</span>}</div><label>Photo de la pizza<input ref={fileInput} type="file" accept="image/jpeg,image/png,image/webp" onChange={e => photo(e.target.files?.[0])} /><small>Facultatif : sans nouvelle photo, l’image affichée sera conservée. JPG, PNG ou WebP · 6 Mo maximum.</small></label></div>
-      <label className="toggle"><input type="checkbox" checked={Number(draft.published) === 1} onChange={e => change('published', e.target.checked ? 1 : 0)} /><span><strong>Afficher sur la carte</strong><small>Décochez pour conserver cette pizza en brouillon.</small></span></label>
     </fieldset>
     {error && <p className="error" role="alert">{error}</p>}
     <div className="form-actions">{pizza.id > 0 && <button className="danger" type="button" disabled={busy} onClick={remove}>Supprimer la pizza</button>}<button type="button" disabled={busy} onClick={onCancel}>Annuler</button><button className="primary" disabled={busy || !modified}>{busy ? 'Enregistrement…' : 'Enregistrer la pizza'}</button></div>

@@ -164,3 +164,8 @@ Demande du propriétaire : permettre de supprimer une pizza. Bouton sur une fich
 ## Photo par défaut — 16 octobre 2026
 
 Les nouvelles pizzas sans photo reçoivent le visuel Maestro pizza_off.jpg (celui de la Rossi). Le build l'optimise en WebP et le copie dans uploads/ avec nom dérivé de son contenu. L'API applique ce défaut côté serveur ; l'administration affiche son aperçu et rend l'envoi de photo facultatif. Une photo existante est conservée lors d'une modification sans envoi. Le visuel ne dépend pas de l'existence de la Rossi en base.
+
+
+## Publication automatique — 16 octobre 2026
+
+À la demande du propriétaire, suppression du contrôle « Afficher sur la carte » et du mode brouillon. Toutes les pizzas enregistrées sont visibles sur le site ; l'API impose published=1 même si un ancien client envoie 0 ou omet le champ. Les anciens brouillons conservent leur visibilité lors du déploiement et deviennent publics seulement lorsqu'ils sont enregistrés à nouveau. Aucune mise à jour globale de visibilité. Le champ SQL est conservé pour compatibilité, sans migration de schéma. Cette décision remplace les indications précédentes sur les brouillons.

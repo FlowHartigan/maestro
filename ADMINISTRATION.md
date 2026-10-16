@@ -4,7 +4,7 @@ Adresse VPS : https://dms-app.fr/maestro/administration/
 
 À la première visite, renseigner le code privé livré séparément, choisir un identifiant (3 à 50 lettres/chiffres/points/tirets) et un mot de passe (12 à 72 caractères). Le code devient inutilisable après création du compte. Aucun compte de test n'est importé en production.
 
-Rechercher ou sélectionner une pizza pour changer son nom, ses ingrédients, ses trois tarifs ou sa photo. « Ajouter une pizza » crée une nouvelle recette. Cocher « Afficher sur la carte » pour publier ; décocher pour conserver un brouillon. Enregistrer applique les changements immédiatement au site. Les changements non enregistrés déclenchent un avertissement au départ. Un conflit entre deux onglets bloque l'écrasement : recharger la fiche.
+Rechercher ou sélectionner une pizza pour changer son nom, ses ingrédients, ses trois tarifs ou sa photo. « Ajouter une pizza » crée une nouvelle recette. Chaque pizza enregistrée est automatiquement visible sur la carte. Enregistrer applique les changements immédiatement au site. Les changements non enregistrés déclenchent un avertissement au départ. Un conflit entre deux onglets bloque l'écrasement : recharger la fiche.
 
 ## Construire et tester
 
@@ -32,9 +32,11 @@ Les actualités ne sont pas encore administrables. IONOS : adapter les chemins e
 
 ## Supprimer une pizza
 
-Ouvrir la fiche puis cliquer « Supprimer la pizza ». La confirmation affiche son nom et permet d'annuler. Après confirmation, la recette est supprimée définitivement de la base et retirée du site. Pour la masquer temporairement, décocher plutôt « Afficher sur la carte ». Les fichiers photo restent conservés pour les sauvegardes ; cette conservation ne restaure pas la recette depuis l'interface.
+Ouvrir la fiche puis cliquer « Supprimer la pizza ». La confirmation affiche son nom et permet d'annuler. Après confirmation, la recette est supprimée définitivement de la base et retirée du site. Les fichiers photo restent conservés pour les sauvegardes ; cette conservation ne restaure pas la recette depuis l'interface.
 
 
 ## Photo par défaut
 
 Une nouvelle pizza reçoit automatiquement le visuel Maestro utilisé pour la Rossi. Ajouter une photo reste facultatif et remplace ce visuel. Modifier une recette sans choisir de fichier conserve sa photo actuelle. Lors du déploiement, copier également le contenu de dist/uploads/ vers le dossier uploads persistant sans effacer les photos existantes ; server/default-photo.json contient son chemin public.
+
+La case de visibilité et le mode brouillon ont été retirés. Chaque enregistrement publie la recette. Les anciens brouillons conservent leur état jusqu’à leur prochain enregistrement.

@@ -28,8 +28,10 @@ session=call('setup',{'username':'integration-admin','password':'Maestro-Integra
 call('setup',{'username':'second-admin','password':'Maestro-Integration-2026!','token':token},status=403)
 pizzas=call('pizzas')['pizzas'];assert len(pizzas)==38
 call('save',{'name':'','ingredients':'x','price26':'10','price33':'11','price40':'12','published':'0'},status=422)
-default_payload={'id':0,'version':0,'name':'Default photo test','ingredients':'Mozzarella','price26':'10','price33':'12','price40':'14','published':0}
+default_payload={'id':0,'version':0,'name':'Default photo test','ingredients':'Mozzarella','price26':'10','price33':'12','price40':'14'}
 default_pizza=call('save',default_payload,status=201)['pizza']
+assert int(default_pizza['published'])==1
+assert 'Default photo test' in client.open(base+'/menu.html').read().decode()
 assert default_pizza['image']==session.get('defaultImage',call('session')['defaultImage'])
 assert client.open(base+'/'+default_pizza['image']).headers['Content-Type']=='image/webp'
 call('delete',{'id':default_pizza['id'],'version':default_pizza['version']})
@@ -39,7 +41,8 @@ import struct,zlib
 def chunk(kind,data):return struct.pack('!I',len(data))+kind+data+struct.pack('!I',zlib.crc32(kind+data)&0xffffffff)
 png=b'\x89PNG\r\n\x1a\n'+chunk(b'IHDR',struct.pack('!2I5B',16,16,8,2,0,0,0))+chunk(b'IDAT',zlib.compress((b'\x00'+b'\xff\xa0\x20'*16)*16))+chunk(b'IEND',b'')
 created=call('save',payload,status=201,files={'photo':('pizza.png','image/png',png)})['pizza']
-html=client.open(base+'/menu.html').read().decode();assert 'Test &lt;script&gt;' not in html
+html=client.open(base+'/menu.html').read().decode();assert 'Test &lt;script&gt;' in html
+assert int(created['published'])==1
 created['published']=1
 saved=call('save',created)['pizza'];assert saved['version']==2
 html=client.open(base+'/menu.html').read().decode();assert 'Test &lt;script&gt;alert(1)&lt;/script&gt;' in html and '<script>alert(1)</script>' not in html
@@ -66,4 +69,4 @@ assert 'Test &lt;script&gt;' not in client.open(base+'/menu.html').read().decode
 call('delete',{'id':saved['id'],'version':saved['version']},status=404)
 call('save',saved,status=404)
 call('logout',{})
-print('PASS: setup once, auth, CSRF, invalid data, upload validation, draft, publication, XSS escaping, updates, conflict, persistence, logout/login, protected deletion, stale version, removal from public site')
+print('PASS: setup once, auth, CSRF, invalid data, upload validation, automatic publication, default image, XSS escaping, updates, conflict, persistence, logout/login, protected deletion, stale version, removal from public site')
