@@ -79,3 +79,11 @@ Mémoire du projet créée le 16 octobre 2026. Lire ce fichier avant toute inter
 - Conséquence : refus d'authentification dans la boucle de disponibilité malgré un serveur démarré.
 - Correction : contrôle administrateur via le socket, puis test réseau PHP/PDO avec le compte applicatif ; requête réussie sur MySQL 5.7.44.
 - Prévention : distinguer le transport, l'hôte autorisé du compte et le mot de passe ; ne pas élargir les droits root pour contourner un contrôle erroné. Attendre la fin de l'initialisation avant les opérations applicatives.
+
+
+### 2026-10-16 — Vérification trop rapide après rechargement Nginx
+
+- Erreur : tester la nouvelle route immédiatement après `systemctl reload nginx`, sans tenir compte de la transition entre les workers.
+- Conséquence : une réponse du site par défaut a fait échouer le contrôle et déclenché le retour arrière ; le nouveau journal Maestro était encore vide.
+- Correction : répéter les contrôles de façon bornée jusqu'à obtenir le contenu Maestro attendu ; pages et certificat ensuite vérifiés.
+- Prévention : après un rechargement progressif, vérifier le contenu attendu et le certificat avec quelques tentatives limitées, sans désactiver la validation TLS ni se contenter d'un HTTP 200 provenant d'une autre application.

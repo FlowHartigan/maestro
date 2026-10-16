@@ -123,3 +123,8 @@ Installation initiale : PHP-FPM 8.5.4 et MySQL 8.4.11. Ces versions ont ensuite 
 Le propriétaire impose PHP 8.4 et MySQL 5.7 sur le VPS. Environnement actif : PHP 8.4.26 et MySQL 5.7.44 en conteneurs dédiés, car ces deux branches ne sont pas proposées par les dépôts standards du VPS Ubuntu 26.04. Les services natifs PHP 8.5 et MySQL 8.4 précédemment installés sont arrêtés et désactivés.
 
 Docker est autorisé pour fournir cet environnement de test ; il ne doit pas devenir une dépendance du code ni une exigence pour le mutualisé IONOS. La même application doit fonctionner directement sur PHP 8.4/MySQL 5.7 chez IONOS. Voir `VPS.md` pour les accès, ports, volumes, contrôles et limites actuelles.
+
+
+## Adresse de test — décision du 16 octobre 2026
+
+La prévisualisation est publiée sous `https://dms-app.fr/maestro/`. L'application mariage reste à la racine et conserve son API `/api/`. Les prochaines évolutions doivent gérer ce préfixe pour les liens, ressources, routes React, API et cookies tout en conservant une base d'URL configurable pour IONOS. Voir `VPS.md` et `deploy/README.md` pour l'état réel du déploiement.

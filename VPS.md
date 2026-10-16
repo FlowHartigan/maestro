@@ -1,6 +1,6 @@
 # VPS de test Maestro
 
-État au 16 octobre 2026. Le serveur est préparé ; le site Maestro n'est pas encore publié.
+État au 16 octobre 2026. Le site existant est publié en prévisualisation à https://dms-app.fr/maestro/.
 
 ## Accès et services existants
 
@@ -46,7 +46,7 @@ MySQL ne publie aucun port sur le VPS ni sur Internet. Le port FastCGI reste lim
 - Exécution FastCGI sur `127.0.0.1:9084` : PHP 8.4.26 ; fichier temporaire supprimé après le contrôle.
 - Anciens services natifs `php8.5-fpm` et `mysql` arrêtés et désactivés après les tests. Leurs paquets et les anciennes données restent présents pour retour arrière ; les commandes PHP/MySQL natives ne désignent pas les versions des conteneurs.
 - Nginx : configuration validée ; site mariage HTTPS HTTP 200 et API saine après bascule.
-- Aucun site Nginx Maestro n'est encore ajouté.
+- Depuis la publication : une route `/maestro/` est ajoutée dans le site Nginx `festi-app`. Le nom du VPS redirige vers cette adresse.
 
 ## Commandes de contrôle
 
@@ -62,3 +62,17 @@ Ne jamais afficher `docker inspect` sans filtrer les champs ni lire les fichiers
 ## Suite
 
 Choisir le domaine de test, préparer DNS/HTTPS et protection d'accès, ajouter un site Nginx Maestro indépendant, préparer les permissions des configurations et médias, déployer `v2` et ses migrations puis vérifier les parcours. Les versions et paramètres effectifs IONOS restent à contrôler ; la parité des versions ne prouve pas à elle seule le fonctionnement complet sur IONOS.
+
+
+## Publication de la prévisualisation — 16 octobre 2026
+
+- Adresse principale : https://dms-app.fr/maestro/ ; `/maestro` redirige vers `/maestro/`.
+- Révision publique : `1306793fd85e`, branche `v2`. Il s'agit du site initial, sans refonte ni administration encore implémentées.
+- Fichiers : `/var/www/maestro/releases/1306793fd85e/public`, lien `current` ; archives publiques seules, sans `.htaccess`, logs, Git, documentation ni secrets.
+- Route Nginx ajoutée dans `/etc/nginx/sites-available/festi-app`, avant le proxy `/api/`. Extrait versionné dans `deploy/nginx-maestro-location.conf`.
+- L'ancienne adresse `vps-328a8329.vps.ovh.ca` redirige en HTTP et HTTPS vers `https://dms-app.fr/maestro$request_uri`.
+- Un certificat distinct `maestro-vps` a été émis pour l'ancienne adresse, renouvellement automatique Certbot avec webroot `/var/www/maestro/current/public`. Le certificat existant dms-app.fr sert la nouvelle route.
+- Prévisualisation publique du contenu existant ; en-têtes noindex sur Maestro. Aucune administration exposée.
+- Contrôles : les trois pages contiennent bien Maestro, CSS/JS/logo accessibles, affichage navigateur HTTPS confirmé ; empreinte HTML de l'accueil mariage identique avant/après et API saine.
+- Sauvegardes Nginx dans `/var/backups/maestro/`, dont `route-20261016-195123` avant l'ajout du préfixe. Ne pas restaurer aveuglément un fichier complet sans vérifier les changements ultérieurs.
+- Lire `deploy/README.md` avant les mises à jour et adapter la configuration lors de l'arrivée du backend PHP et de l'administration.
