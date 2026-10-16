@@ -54,7 +54,7 @@ test('hero preload and CSS agree; all background images resolve', async () => {
 });
 
 test('deployment contains only public files and respects the size budget', async () => {
-  assert.deepEqual((await readdir(dist)).sort(), ['.htaccess', 'administration', 'api', 'assets', 'contact.html', 'index.html', 'index.php', 'menu.html']);
+  assert.deepEqual((await readdir(dist)).sort(), ['.htaccess', 'administration', 'api', 'assets', 'contact.html', 'index.html', 'index.php', 'menu.html', 'uploads']);
   const report = JSON.parse(await readFile(resolve(root, '.build/report.json'), 'utf8'));
   assert.equal(report.browserJavaScriptBytes, 0);
   assert.ok(report.cssGzipBytes < 4000);

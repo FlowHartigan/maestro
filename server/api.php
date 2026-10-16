@@ -9,7 +9,7 @@ try {
     $action = $_GET['action'] ?? 'session';
     $method = $_SERVER['REQUEST_METHOD'];
     if ($method === 'GET' && $action === 'session') {
-        respond(['user' => user(), 'csrf' => $_SESSION['csrf'], 'setupRequired' => (bool)query('SELECT setup_hash IS NOT NULL FROM app_settings WHERE id = 1')->fetchColumn()]);
+        respond(['user' => user(), 'csrf' => $_SESSION['csrf'], 'defaultImage' => defaultPhoto(), 'setupRequired' => (bool)query('SELECT setup_hash IS NOT NULL FROM app_settings WHERE id = 1')->fetchColumn()]);
     }
     if ($method === 'GET' && $action === 'pizzas') { requireUser(); respond(['pizzas' => allPizzas()]); }
     if ($method !== 'POST') fail('Méthode non autorisée.', 405);
@@ -63,7 +63,7 @@ try {
     if ($id && !$old) fail('Pizza introuvable.', 404);
     if ($old && (int)$old['version'] !== $version) fail('Cette pizza a été modifiée ailleurs. Rechargez sa fiche avant de réessayer.', 409);
     $photo = uploadPhoto();
-    $image = $photo ?? ($old['image'] ?? '');
+    $image = $photo ?? ($old['image'] ?? defaultPhoto());
     if ($image === '') fail('Ajoutez une photo pour cette nouvelle pizza.', 422);
     try {
         if ($id) {

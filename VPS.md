@@ -108,3 +108,7 @@ Contrôle visuel du formulaire à 390 et 768 px : champs, prix et photo accessib
 ## Suppression des pizzas — 16 octobre 2026
 
 Release active : delete-20261016-211322. Bouton de suppression avec confirmation, authentification/CSRF et contrôle de version. Aucun changement de schéma. Sauvegarde : /var/backups/maestro/delete-20261016-211322. Typecheck, build, 5 tests de build et tests API isolés de suppression réussis (401 sans connexion, 403 sans CSRF, 409 si version périmée, retrait public, 404 après suppression). Carte publique et accueil mariage identiques avant/après publication.
+
+## Visuel par défaut — 16 octobre 2026
+
+Release active : default-20261016-211852. Les nouvelles pizzas sans photo utilisent le visuel Maestro de la Rossi, copié dans shared/uploads. Les recettes existantes restent inchangées. Création sans photo et accès WebP vérifiés en environnement isolé ; aperçu fourni par l’API publique de session. Typecheck/build/5 tests et tests API réussis. Après bascule, rechargement gracieux de PHP-FPM pour vider le cache des chemins de current. Carte publique et mariage identiques après déploiement.

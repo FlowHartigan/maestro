@@ -137,3 +137,10 @@ Mémoire du projet créée le 16 octobre 2026. Lire ce fichier avant toute inter
 - Erreur : utiliser ../ comme base Vite de l'administration.
 - Correction : base ./ et ressources à côté de son index, dans administration/assets/.
 - Prévention : contrôler les URL du build sous le préfixe réel, pas seulement à la racine du serveur local.
+
+### 2026-10-16 — Cache PHP et bascule de release
+
+- Erreur : vérifier immédiatement la nouvelle API après changement du lien current sans actualiser les workers PHP.
+- Conséquence : ancienne réponse API servie par le cache des chemins ; contrôle de publication refusé et rollback automatique.
+- Correction : rechargement gracieux de PHP-FPM (USR2), puis contrôle avec quelques tentatives bornées.
+- Prévention : après bascule atomique PHP, renouveler les workers et vérifier une propriété de la nouvelle version de l’API.

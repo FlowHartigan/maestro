@@ -28,6 +28,11 @@ session=call('setup',{'username':'integration-admin','password':'Maestro-Integra
 call('setup',{'username':'second-admin','password':'Maestro-Integration-2026!','token':token},status=403)
 pizzas=call('pizzas')['pizzas'];assert len(pizzas)==38
 call('save',{'name':'','ingredients':'x','price26':'10','price33':'11','price40':'12','published':'0'},status=422)
+default_payload={'id':0,'version':0,'name':'Default photo test','ingredients':'Mozzarella','price26':'10','price33':'12','price40':'14','published':0}
+default_pizza=call('save',default_payload,status=201)['pizza']
+assert default_pizza['image']==session.get('defaultImage',call('session')['defaultImage'])
+assert client.open(base+'/'+default_pizza['image']).headers['Content-Type']=='image/webp'
+call('delete',{'id':default_pizza['id'],'version':default_pizza['version']})
 payload={'id':'0','version':'0','name':'Test <script>alert(1)</script>','ingredients':'Mozzarella & basilic','price26':'10.20','price33':'12.30','price40':'14.40','published':'0'}
 call('save',payload,status=422,files={'photo':('x.svg','image/svg+xml',b'<svg xmlns="http://www.w3.org/2000/svg"/>')})
 import struct,zlib

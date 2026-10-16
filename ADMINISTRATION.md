@@ -33,3 +33,8 @@ Les actualités ne sont pas encore administrables. IONOS : adapter les chemins e
 ## Supprimer une pizza
 
 Ouvrir la fiche puis cliquer « Supprimer la pizza ». La confirmation affiche son nom et permet d'annuler. Après confirmation, la recette est supprimée définitivement de la base et retirée du site. Pour la masquer temporairement, décocher plutôt « Afficher sur la carte ». Les fichiers photo restent conservés pour les sauvegardes ; cette conservation ne restaure pas la recette depuis l'interface.
+
+
+## Photo par défaut
+
+Une nouvelle pizza reçoit automatiquement le visuel Maestro utilisé pour la Rossi. Ajouter une photo reste facultatif et remplace ce visuel. Modifier une recette sans choisir de fichier conserve sa photo actuelle. Lors du déploiement, copier également le contenu de dist/uploads/ vers le dossier uploads persistant sans effacer les photos existantes ; server/default-photo.json contient son chemin public.

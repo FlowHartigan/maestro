@@ -79,6 +79,9 @@ function uploadPhoto(): ?string {
     imagedestroy($source); imagedestroy($image);
     return 'uploads/' . $name;
 }
+function defaultPhoto(): string {
+    return json_decode(file_get_contents(__DIR__ . '/default-photo.json'), true, 512, JSON_THROW_ON_ERROR)['image'];
+}
 function allPizzas(bool $publishedOnly = false): array {
     return query('SELECT id, name, ingredients, price26, price33, price40, image, published, version FROM pizzas' . ($publishedOnly ? ' WHERE published = 1' : '') . ' ORDER BY sort_order, id')->fetchAll();
 }

@@ -71,6 +71,12 @@ await writeFile('.build/server/templates/card.html', renderCardTemplate());
 await writeFile('.build/server/templates/feature.html', renderFeatureTemplate());
 await writeFile('.build/server/feature.json', JSON.stringify({image:manifest['images/pizzeria/don-scata-feature.png'].src}));
 await writeFile('.build/server/seed.json', JSON.stringify(pizzas.map((p,i) => ({id:i+1,name:p.name,ingredients:p.ingredients,prices:p.prices,image:manifest[p.image].src,sort_order:i}))));
+// Keep the default image in persistent uploads, independently of any pizza record.
+const defaultBytes = await readFile(resolve(dist, manifest['images/pizza/pizza_off.jpg'].src));
+const defaultName = createHash('sha256').update(defaultBytes).digest('hex').slice(0,40) + '.webp';
+await mkdir('dist/uploads', {recursive:true});
+await writeFile(resolve(dist, 'uploads', defaultName), defaultBytes);
+await writeFile('.build/server/default-photo.json', JSON.stringify({image:'uploads/'+defaultName}));
 await cp('public', 'dist', {recursive:true});
 await build({configFile:false,root:'admin',base:'./',publicDir:false,esbuild:{jsx:'automatic'},build:{outDir:'../.build/admin',emptyOutDir:true,assetsDir:'assets',rollupOptions:{input:'admin/index.html'}}});
 await mkdir('dist/administration', {recursive:true});

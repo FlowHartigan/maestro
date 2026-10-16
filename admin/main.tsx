@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import './style.css';
 
 type Pizza = { id: number; name: string; ingredients: string; price26: string; price33: string; price40: string; image: string; published: number; version: number };
-type Session = { user: { username: string } | null; csrf: string; setupRequired?: boolean };
+type Session = { user: { username: string } | null; csrf: string; setupRequired?: boolean; defaultImage?: string };
 const blank: Pizza = { id: 0, name: '', ingredients: '', price26: '', price33: '', price40: '', image: '', published: 0, version: 0 };
 const apiURL = '../api/index.php';
 
@@ -51,13 +51,14 @@ function App() {
   function choose(pizza: Pizza) {
     if (saving) return;
     if (dirty && !window.confirm('Abandonner les modifications non enregistrées ?')) return;
-    setSelected({ ...pizza }); setDirty(false); setNotice('');
+    setSelected({ ...pizza, image: pizza.image || session?.defaultImage || '' }); setDirty(false); setNotice('');
   }
   async function login(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); setLoginBusy(true); setError('');
     try {
       const data = Object.fromEntries(new FormData(event.currentTarget));
-      setSession(await request(session?.setupRequired ? 'setup' : 'login', data, session?.csrf));
+      const result = await request(session?.setupRequired ? 'setup' : 'login', data, session?.csrf);
+      setSession({ ...result, defaultImage: session?.defaultImage });
     } catch (e) { setError((e as Error).message); }
     finally { setLoginBusy(false); }
   }
@@ -152,7 +153,7 @@ function Editor({ pizza, csrf, onBusy, onDirty, onSaved, onDeleted, onCancel }: 
       <label>Nom de la pizza<input value={draft.name} onChange={e => change('name', e.target.value)} required maxLength={100} autoComplete="off" /></label>
       <label>Ingrédients<textarea value={draft.ingredients} onChange={e => change('ingredients', e.target.value)} required maxLength={1000} rows={4} placeholder="Mozzarella, tomates, basilic…" /></label>
       <div className="prices"><label>26 cm · €<input type="number" inputMode="decimal" min="0.01" max="999" step="0.01" required value={draft.price26} onChange={e => change('price26', e.target.value)} /></label><label>33 cm · €<input type="number" inputMode="decimal" min="0.01" max="999" step="0.01" required value={draft.price33} onChange={e => change('price33', e.target.value)} /></label><label>40 cm · €<input type="number" inputMode="decimal" min="0.01" max="999" step="0.01" required value={draft.price40} onChange={e => change('price40', e.target.value)} /></label></div>
-      <div className="photo-field"><div className="photo-preview">{preview ? <img src={preview} alt="Aperçu de la pizza" /> : <span>Votre photo apparaîtra ici</span>}</div><label>Photo de la pizza<input ref={fileInput} type="file" accept="image/jpeg,image/png,image/webp" required={!pizza.image} onChange={e => photo(e.target.files?.[0])} /><small>JPG, PNG ou WebP · 6 Mo maximum. La photo sera optimisée automatiquement.</small></label></div>
+      <div className="photo-field"><div className="photo-preview">{preview ? <img src={preview} alt="Aperçu de la pizza" /> : <span>Votre photo apparaîtra ici</span>}</div><label>Photo de la pizza<input ref={fileInput} type="file" accept="image/jpeg,image/png,image/webp" onChange={e => photo(e.target.files?.[0])} /><small>Facultatif : sans nouvelle photo, l’image affichée sera conservée. JPG, PNG ou WebP · 6 Mo maximum.</small></label></div>
       <label className="toggle"><input type="checkbox" checked={Number(draft.published) === 1} onChange={e => change('published', e.target.checked ? 1 : 0)} /><span><strong>Afficher sur la carte</strong><small>Décochez pour conserver cette pizza en brouillon.</small></span></label>
     </fieldset>
     {error && <p className="error" role="alert">{error}</p>}
