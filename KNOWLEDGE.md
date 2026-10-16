@@ -151,3 +151,11 @@ Mémoire du projet créée le 16 octobre 2026. Lire ce fichier avant toute inter
 - Conséquence : bouton de sauvegarde encore désactivé malgré une valeur affichée modifiée, et délai d’attente sur le dialogue.
 - Correction : saisie native setValue avec les indices de la dernière observation, puis vérification du statut « Non enregistré » ; validation du dialogue natif avec la touche Entrée. Sauvegarde et rechargement ensuite vérifiés.
 - Prévention : vérifier l’état applicatif après saisie automatisée d’une heure ; distinguer un changement DOM d’une modification prise en compte, puis confirmer la persistance. Traiter les confirmations natives par les commandes natives disponibles.
+
+
+### 2026-10-17 — Encodage des scripts préparés sous Windows
+
+- Erreur : lire un script Python UTF-8 avec read_text() sans encodage explicite sous Windows.
+- Conséquence : le contrôle du mot Fermé était corrompu et a déclenché un rollback automatique alors que la page était correcte.
+- Correction : read_text(encoding="utf-8"), puis nouvelle publication vérifiée.
+- Prévention : préciser UTF-8 à chaque lecture et écriture de sources ou documents dans les scripts de préparation.

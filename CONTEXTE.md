@@ -67,7 +67,7 @@ Photos JPG/PNG/WebP, maximum 6 Mo et 24 mégapixels, validation serveur et réen
 - VPS : vps-328a8329.vps.ovh.ca, Ubuntu. SSH utilisateur ubuntu ; clé locale C:\Users\flori\.ssh\festi-app-vps. Utiliser IdentitiesOnly=yes, BatchMode=yes, StrictHostKeyChecking=yes ; sudo -n disponible. Ne pas lire ni copier le contenu de la clé.
 - Site mariage à la racine dms-app.fr : à préserver. API mariage /api/ proxifiée vers 127.0.0.1:3001 ; contrôle http://127.0.0.1:3001/api/health. Ne toucher qu'au périmètre Maestro.
 - Nginx : /etc/nginx/sites-available/festi-app, bloc BEGIN/END MAESTRO PREVIEW. Configuration versionnée deploy/nginx-maestro-location.conf. Pages .html et API Maestro traitées par PHP ; autres PHP et fichiers privés non exposés.
-- Release active après dernière intervention : /var/www/maestro/releases/casa-20261016-220252 ; lien /var/www/maestro/current. REVISION : 6095b2d. Revalider l'état réel avant toute modification.
+- Release active après dernière intervention : /var/www/maestro/releases/switch-20261016-221007 ; lien /var/www/maestro/current. REVISION : 4886397. Revalider l'état réel avant toute modification.
 - Une release comprend public/ (dist/) et server/ (.build/server/) hors racine publique. config.local.json est un lien vers shared/config.json.
 - Persistance : /var/www/maestro/shared/config.json (root:www-data 0640), shared/uploads. Ne pas supprimer shared ni remplacer la base lors d'une mise à jour.
 - MySQL : conteneur maestro-mysql57, MySQL 5.7.44, réseau maestro-test, aucun port publié ; base maestro_test, utilisateur maestro_app. Secrets privés serveur. Les secrets ne sont pas dans ce document.
@@ -105,3 +105,8 @@ Les aperçus et le fichier privé d'activation initial sont dans l'espace local 
 ## Livraison Casa — 17 octobre 2026
 
 Version applicative 6095b2d, release casa-20261016-220252 (horloge serveur UTC), sauvegarde /var/backups/maestro/casa-20261016-220252. Migration 002 additive appliquée, ligne Pizza inchangée. Route Nginx Casa ajoutée dans le bloc Maestro, configuration testée et rechargée. Quatre pages et ressources contrôlées, API protégée, cartes de pizzas identiques avant/après, accueil et API mariage intacts. Typecheck, build et sept tests de build réussis ; tests PHP/API isolés et UI mobile/ordinateur réussis. Aperçu public sans erreur console ni image manquante.
+
+
+## Sélecteur intégré — 17 octobre 2026
+
+Dernière release : switch-20261016-221007, révision 4886397. Sélecteur compact intégré à un en-tête commun, curseur entre les établissements et fondu natif CSS entre les pages ; préférence de réduction des mouvements respectée. Aucun JavaScript public ajouté. Typecheck, build et sept tests réussis ; navigation souris/clavier, rendu à 320/390/1280 px contrôlés. Quatre pages et ressources en ligne vérifiées, carte Pizza et site mariage inchangés. Aucune migration SQL ni modification Nginx pour cette livraison. Sauvegarde : /var/backups/maestro/switch-20261016-221007. Les commits restent locaux.

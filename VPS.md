@@ -127,3 +127,8 @@ Vérifications réalisées : typecheck, build et six tests de build réussis ; s
 ## Livraison du 17 octobre 2026 — Casa
 
 Release active `/var/www/maestro/releases/casa-20261016-220252`, révision `6095b2d`, sauvegarde `/var/backups/maestro/casa-20261016-220252`. Migration 002 appliquée sans modifier les horaires Pizza. Route Casa ajoutée au seul bloc Maestro, nginx -t réussi. Quatre pages, images, administration et protection API vérifiées ; pizzas et site mariage préservés. Détails dans CASA.md et CONTEXTE.md.
+
+
+## Sélecteur intégré — 17 octobre 2026
+
+Release active switch-20261016-221007, révision 4886397. Sauvegarde /var/backups/maestro/switch-20261016-221007. Mise à jour de présentation uniquement, ni migration SQL ni changement Nginx. Contrôles des quatre routes, ressources, carte Pizza et santé mariage réussis.
