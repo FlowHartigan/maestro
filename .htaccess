@@ -1,0 +1,5 @@
+Options +FollowSymlinks
+RewriteEngine On
+RewriteCond %{SERVER_PORT} !=443
+RewriteRule ^(.*)$ https://pizzamaestro.com/$1 [R=301,L]
+RewriteRule ^les-pizzas/$  https://pizzamaestro.com/menu.html$ [L]

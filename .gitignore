@@ -1,0 +1,17 @@
+# Journaux et statistiques du serveur
+logs/
+*.log
+
+# Fichiers locaux et dépendances
+.DS_Store
+Thumbs.db
+node_modules/
+
+# Secrets locaux
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.pfx
+*.p12
