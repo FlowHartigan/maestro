@@ -102,3 +102,10 @@ Mémoire du projet créée le 16 octobre 2026. Lire ce fichier avant toute inter
 - Conséquence : mesure automatique des débordements indisponible via cette méthode.
 - Correction : contrôle visuel des cadres mobile et tablette, puis inspection directe de la page principale.
 - Prévention : utiliser uniquement les capacités DOM exposées et distinguer contrôle visuel et mesure automatique.
+
+### 2026-10-16 — Cache CSS après remplacement du fond
+
+- Erreur : conserver la même URL de feuille CSS après modification du fond d’accueil.
+- Conséquence : le navigateur pouvait afficher l’ancienne pizza malgré les fichiers corrects sur le serveur.
+- Correction : versionner l’URL CSS de l’accueil.
+- Prévention : modifier la version des ressources dépendantes lors d’une publication et vérifier le rendu navigateur.
