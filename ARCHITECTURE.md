@@ -133,3 +133,13 @@ La prévisualisation est publiée sous `https://dms-app.fr/maestro/`. L'applicat
 ## Direction graphique — 16 octobre 2026
 
 Le propriétaire choisit le template Pizzeria #78480 de TemplateMonster et demande de récupérer les fichiers publics de sa démo. Adaptation sur v2 des pages accueil, carte et contact, avec les contenus Maestro et les URL existantes. Voir TEMPLATE.md pour la provenance, la palette et le périmètre. Ce choix remplace la piste graphique proposée auparavant et ne change pas la cible PHP/React/MySQL.
+
+## Front entièrement React et poids minimal — 16 octobre 2026
+
+Nouvelle demande du propriétaire : réécrire tout le front en React, aussi léger que possible. Les trois pages publiques sont désormais des composants React JSX compilés avec Vite puis rendus en HTML au build par React DOM. Cette mise en œuvre remplace les anciennes pages HTML écrites à la main ; aucun JavaScript React n'est envoyé au navigateur tant que les pages n'ont pas d'interaction applicative. Navigation par vrais liens et URL historiques conservées.
+
+Les images sont transformées en WebP et redimensionnées au build ; les pizzas ont deux variantes et un srcset. CSS minifié, noms de ressources avec empreinte de contenu, chargement différé des photos sous la ligne de flottaison. Seul dist/ est publié, sans Node permanent. Les originaux restent dans images/ pour les futurs builds.
+
+La cible backend PHP 8.4/MySQL 5.7 et l'administration React restent maintenues mais non implémentées. Le front livré ici est statique : les données viennent de src/pizzas.json et une modification nécessite actuellement un build. Lors de l'ajout de l'administration, la publication des contenus depuis PHP/MySQL devra rendre ces données disponibles sans rebuild manuel (API avec composants React interactifs, ou génération de pages déclenchée côté serveur). Ce raccordement reste à concevoir et vérifier sur les deux hébergements ; ne pas présenter la gestion dynamique comme déjà réalisée.
+
+Les polices Google Fonts existantes restent externes. Les mesures locales de poids excluent ces réponses tierces. Voir README.md pour les commandes et les chiffres de build.

@@ -1,0 +1,382 @@
+[
+  {
+    "name": "Margherita",
+    "ingredients": "Mozzarella, Purée de basilic",
+    "image": "images/pizza/margarita.jpg",
+    "prices": [
+      8.5,
+      10.5,
+      13.5
+    ]
+  },
+  {
+    "name": "Palermo",
+    "ingredients": "Mozzarella, Anchois, Câpres, Olives",
+    "image": "images/pizza/palermo.jpg",
+    "prices": [
+      10.5,
+      12.5,
+      16.5
+    ]
+  },
+  {
+    "name": "Contadino",
+    "ingredients": "Mozzarella, Pomme de Terre, Pointe de crème fraîche",
+    "image": "images/pizza/contadino.jpg",
+    "prices": [
+      10.5,
+      12.5,
+      16.5
+    ]
+  },
+  {
+    "name": "Quattro Stagion",
+    "ingredients": "Mozzarella, Champignons, Artichauts, Courgettes, Poivrons, Pointe de crème fraîche",
+    "image": "images/pizza/quattrostagion.JPG",
+    "prices": [
+      10.5,
+      12.5,
+      16.5
+    ]
+  },
+  {
+    "name": "Brindisi",
+    "ingredients": "Mozzarella, Tomates rondelles, Chèvre, Purée de basilic",
+    "image": "images/pizza/brindisi.JPG",
+    "prices": [
+      10.5,
+      12.5,
+      16.5
+    ]
+  },
+  {
+    "name": "Garibaldi",
+    "ingredients": "Mozzarella, Jambon",
+    "image": "images/pizza/garibaldi.jpg",
+    "prices": [
+      11.3,
+      13.3,
+      16.7
+    ]
+  },
+  {
+    "name": "Biaggi",
+    "ingredients": "Mozzarella, Jambon, Ananas",
+    "image": "images/pizza/biaggi.jpg",
+    "prices": [
+      11.3,
+      13.3,
+      16.7
+    ]
+  },
+  {
+    "name": "Sala",
+    "ingredients": "Mozzarella, Poulet, Pointe de crème fraîche, Ananas",
+    "image": "images/pizza/sala.jpg",
+    "prices": [
+      11.3,
+      13.3,
+      16.7
+    ]
+  },
+  {
+    "name": "Antonella",
+    "ingredients": "Mozzarella, Jambon, Champignons, Pointe de crème fraîche",
+    "image": "images/pizza/antonella.jpg",
+    "prices": [
+      11.3,
+      13.3,
+      16.7
+    ]
+  },
+  {
+    "name": "Maestro",
+    "ingredients": "Mozzarella, Courgettes, Aubergines, Mortadelle (charcuterie italienne)",
+    "image": "images/pizza/maestro.jpg",
+    "prices": [
+      11.3,
+      13.3,
+      16.7
+    ]
+  },
+  {
+    "name": "Al Capone",
+    "ingredients": "Mozzarella, Merguez, Oignons",
+    "image": "images/pizza/alcapone.jpg",
+    "prices": [
+      11.3,
+      13.3,
+      16.7
+    ]
+  },
+  {
+    "name": "De Niro",
+    "ingredients": "Mozzarella, Chorizo fort, Poivrons, Olives",
+    "image": "images/pizza/de-niro.jpg",
+    "prices": [
+      11.3,
+      13.3,
+      16.7
+    ]
+  },
+  {
+    "name": "Al Pacino",
+    "ingredients": "Mozzarella, Lardons fumés, Mortadelle",
+    "image": "images/pizza/al-pacino.jpg",
+    "prices": [
+      11.3,
+      13.3,
+      16.7
+    ]
+  },
+  {
+    "name": "Calzone",
+    "ingredients": "Mozzarella, Jambon, Champignons, Artichauts, Oeufs, Pointe de crème fraîche - (spécialité en forme de chausson, taille moyenne) ",
+    "image": "images/pizza/calzone.JPG",
+    "prices": [
+      11.3,
+      13.3,
+      16.7
+    ]
+  },
+  {
+    "name": "Capriciosa",
+    "ingredients": "Mozzarella, Jambon, Champignons, Rosette, Artichauts, Oeuf",
+    "image": "images/pizza/capriciosa.JPG",
+    "prices": [
+      11.3,
+      13.3,
+      16.7
+    ]
+  },
+  {
+    "name": "Squadra Azzura",
+    "ingredients": "Mozzarella, Jambon, Jambon cru",
+    "image": "images/pizza/squaddra-azzura.jpg",
+    "prices": [
+      11.5,
+      13.7,
+      17.1
+    ]
+  },
+  {
+    "name": "Coppi",
+    "ingredients": "Mozzarella, Jambon, Lardons fumés, Rosette, Chorizo fort",
+    "image": "images/pizza/coppi.jpg",
+    "prices": [
+      11.5,
+      13.7,
+      17.1
+    ]
+  },
+  {
+    "name": "San Marco",
+    "ingredients": "Base Crème fraîche, Mozzarella, Pommes de terre, Lardons, Bleu",
+    "image": "images/pizza/sanmarco.JPG",
+    "prices": [
+      11.5,
+      13.7,
+      17.1
+    ]
+  },
+  {
+    "name": "Pinocchio",
+    "ingredients": "Mozzarella, Chèvre, Oignons, Lardons",
+    "image": "images/pizza/pincchio.jpg",
+    "prices": [
+      11.5,
+      13.7,
+      17.1
+    ]
+  },
+  {
+    "name": "Topolino",
+    "ingredients": "Aux trois fromages italiens : Ricotta, Gorgonzola, Mozzarella",
+    "image": "images/pizza/topolino.jpg",
+    "prices": [
+      11.5,
+      13.7,
+      17.1
+    ]
+  },
+  {
+    "name": "Cairoli",
+    "ingredients": "Mozzarella, Thon, Moutarde à l’ancienne (Charroux), Citron",
+    "image": "images/pizza/cairoli.JPG",
+    "prices": [
+      11.5,
+      13.7,
+      17.1
+    ]
+  },
+  {
+    "name": "Roma",
+    "ingredients": "(Pizza sans Fromage) Jambon, Champignons, Rosette, Chorizo fort, Artichauts, Oeuf",
+    "image": "images/pizza/roma.jpg",
+    "prices": [
+      11.5,
+      13.7,
+      17.1
+    ]
+  },
+  {
+    "name": "Don Scata",
+    "ingredients": "Mozzarella, Champignons, Rosette, Chorizo fort, Merguez, Oeuf",
+    "image": "images/pizza/don-scata.jpg",
+    "prices": [
+      11.5,
+      13.7,
+      17.1
+    ]
+  },
+  {
+    "name": "Rossi",
+    "ingredients": "Mozzarella, St-Nectaire, Jambon cru",
+    "image": "images/pizza/pizza_off.jpg",
+    "prices": [
+      11.9,
+      14.3,
+      17.5
+    ]
+  },
+  {
+    "name": "Dolcemiela",
+    "ingredients": "Mozzarella, Chèvre, Jambon cru, Miel",
+    "image": "images/pizza/dolcemiela.jpg",
+    "prices": [
+      11.9,
+      14.3,
+      17.5
+    ]
+  },
+  {
+    "name": "Siracusa",
+    "ingredients": "Mozzarella, Saumon fumé, Epinards, Pointe de crème fraîche",
+    "image": "images/pizza/siracusa.JPG",
+    "prices": [
+      11.9,
+      14.3,
+      17.5
+    ]
+  },
+  {
+    "name": "Marina",
+    "ingredients": "Mozzarella, Fruits de mer, Persillade",
+    "image": "images/pizza/marina.JPG",
+    "prices": [
+      12.5,
+      15.5,
+      19.9
+    ]
+  },
+  {
+    "name": "Gondolini",
+    "ingredients": "Mozzarella, Boeuf haché, Frites , Oeuf",
+    "image": "images/pizza/gondolini.jpg",
+    "prices": [
+      12.5,
+      15.5,
+      19.9
+    ]
+  },
+  {
+    "name": "Verone",
+    "ingredients": "Mozzarella, Boeuf haché, Oignons, Oeuf, Pointe de crème fraîche",
+    "image": "images/pizza/verone.jpg",
+    "prices": [
+      12.5,
+      15.5,
+      19.9
+    ]
+  },
+  {
+    "name": "Falcone",
+    "ingredients": "Mozzarella, Boeuf haché, Poivrons, Pointe de crème fraîche",
+    "image": "images/pizza/falcone.jpg",
+    "prices": [
+      12.5,
+      15.5,
+      19.9
+    ]
+  },
+  {
+    "name": "Agostini",
+    "ingredients": "Mozzarella, Boeuf haché, Jambon, Champignons, Oeuf",
+    "image": "images/pizza/agostini.jpg",
+    "prices": [
+      12.5,
+      15.5,
+      19.9
+    ]
+  },
+  {
+    "name": "Concordia",
+    "ingredients": "Base Crème fraîche, Mozzarella, Tomates rondelles, Noix de St-Jacques, Persillade",
+    "image": "images/pizza/concordia.jpg",
+    "prices": [
+      12.5,
+      15.5,
+      19.9
+    ]
+  },
+  {
+    "name": "Cesare",
+    "ingredients": "Base Crème fraîche, Ail, Pommes de terre, Lardons fumés, Tome fraîche, Jambon cru",
+    "image": "images/pizza/cesare.jpg",
+    "prices": [
+      12.5,
+      15.5,
+      19.9
+    ]
+  },
+  {
+    "name": "Fenati",
+    "ingredients": "Base Crème fraîche, Tomates rondelles, Mozzarella di Bufala, Parmigiano, Romarin, Jambon cru, Roquette, Huile de Noisette",
+    "image": "images/pizza/fenati.JPG",
+    "prices": [
+      12.5,
+      15.5,
+      19.9
+    ]
+  },
+  {
+    "name": "Salome",
+    "ingredients": "Mozzarella, Chèvre, Jambon cru, Confiture de figues, Noix, Bleu, Miel",
+    "image": "images/pizza/salome.jpg",
+    "prices": [
+      12.5,
+      15.5,
+      19.9
+    ]
+  },
+  {
+    "name": "Ascari",
+    "ingredients": "Base crème fraîche, Mozzarella, Champignons, Bleu Noix",
+    "image": "images/pizza/escari.jpg",
+    "prices": [
+      12.9,
+      16.1,
+      20.3
+    ]
+  },
+  {
+    "name": "Simoncelli",
+    "ingredients": "St nectaire, Brie, Roblochon, Mozzarella",
+    "image": "images/pizza/simoncelli.jpg",
+    "prices": [
+      12.9,
+      16.1,
+      20.3
+    ]
+  },
+  {
+    "name": "Kootrapali",
+    "ingredients": "Base crème fraiche et curry, Mozzarella, Pomme de terre, Poulet, Poivrons",
+    "image": "images/pizza/Kootrapali.JPG",
+    "prices": [
+      12.5,
+      15.5,
+      19.9
+    ]
+  }
+]

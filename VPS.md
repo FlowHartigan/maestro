@@ -84,3 +84,7 @@ Version active : `74b867e2a31e`, dossier `/var/www/maestro/releases/74b867e2a31e
 ## Adaptation Pizzeria — 16 octobre 2026
 
 Version publique active : `838adba009f9`, dans `/var/www/maestro/releases/838adba009f9/public`. Accueil, carte et contact utilisent la direction du template choisi. Ancienne version conservée : `74b867e2a31e`. Contrôles HTTPS : trois pages identiques aux sources, 42 images accessibles (38 pizzas, logo et trois médias du template), CSS accessible, accueil mariage inchangé et API saine. Contrôle visuel navigateur effectué ; aucune erreur dans les journaux console consultés. Aucune modification Nginx ou base de données.
+
+## Front React pré-rendu
+
+La livraison React publie uniquement dist/ (trois HTML et assets avec empreintes), préparé par pnpm build et pnpm test. Aucun Node ou React côté serveur de production, aucun changement PHP/MySQL/Nginx nécessaire. Les anciennes sources HTML/CSS/jQuery ne sont plus les sources de référence ; lire README.md.

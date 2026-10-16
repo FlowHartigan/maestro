@@ -109,3 +109,17 @@ Mémoire du projet créée le 16 octobre 2026. Lire ce fichier avant toute inter
 - Conséquence : le navigateur pouvait afficher l’ancienne pizza malgré les fichiers corrects sur le serveur.
 - Correction : versionner l’URL CSS de l’accueil.
 - Prévention : modifier la version des ressources dépendantes lors d’une publication et vérifier le rendu navigateur.
+
+### 2026-10-16 — Titre React et répertoire de commande
+
+- Erreurs : créer un élément title avec plusieurs enfants JSX ; copier des fichiers avec des chemins relatifs après changement du dossier de travail.
+- Conséquences : titre vide dans le HTML généré et copie initiale échouée.
+- Corrections : une seule chaîne pour title, contrôlée par test ; chemins absolus pour les fichiers préparés hors dépôt.
+- Prévention : comparer le texte et les liens avant/après migration ; ne pas déduire le répertoire source du cwd d'une commande.
+
+### 2026-10-16 — Paramètre pnpm obsolète
+
+- Erreur : utiliser ignoredBuiltDependencies avec pnpm 11.
+- Conséquence : installation signalée en échec malgré les binaires disponibles.
+- Correction : allowBuilds avec esbuild et sharp à false, puis installation verrouillée, build et tests réussis.
+- Prévention : vérifier la documentation de la version effective du gestionnaire.

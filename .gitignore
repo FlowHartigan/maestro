@@ -15,3 +15,7 @@ node_modules/
 *.key
 *.pfx
 *.p12
+
+# React build artifacts
+dist/
+.build/
