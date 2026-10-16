@@ -95,3 +95,13 @@ Le travail est terminé lorsque les fonctionnalités conservées restent opérat
 - Le site utilise actuellement Bootstrap, jQuery et plusieurs extensions d’animation. Examiner leurs usages avant de les remplacer ou de les retirer.
 - Vérifier si le CSS est généré depuis les sources SCSS avant de choisir les fichiers à modifier.
 - Préserver les informations des établissements, la carte, les prix et les coordonnées tant qu’aucune modification de ces contenus n’a été demandée.
+
+## Versions et branches
+
+Décision du propriétaire du 16 octobre 2026 :
+
+- `v1` conserve le site initial avant refonte ; le tag `v1.0.0` en fixe la version.
+- `v2` porte la documentation de conception, la refonte et toutes les évolutions à venir.
+- Ne pas modifier `v1` ni déplacer le tag `v1.0.0`.
+- Avant toute modification, vérifier que la branche active est `v2`. Si une branche de travail est nécessaire, la créer depuis `v2` et cibler `v2` pour son intégration.
+- Ne pas intégrer les évolutions à `main` sans nouvelle instruction du propriétaire.

@@ -107,3 +107,7 @@ Ces éléments sont des propositions de conception, pas un cahier des charges d�
 ## Mise à jour
 
 Lorsqu'une décision change, noter la date, le nouveau choix et sa raison. Distinguer les décisions validées, les propositions et les contraintes vérifiées.
+
+## Versions du projet
+
+Décision du 16 octobre 2026 : le site initial est conservé dans la branche `v1` et identifié par le tag `v1.0.0`. La branche `v2` contient les documents de conception et accueillera la refonte React/PHP/MySQL, les adaptations de déploiement et toutes les évolutions suivantes. Les développements et intégrations ciblent `v2` ; `v1` reste une référence figée.
