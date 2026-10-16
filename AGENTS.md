@@ -2,6 +2,8 @@
 
 ## Documents à consulter avant toute intervention
 
+Commencer par `CONTEXTE.md` pour le point de reprise et l’état actuel ; les décisions les plus récentes priment sur les descriptions historiques.
+
 1. Lire `ARCHITECTURE.md` à la racine du projet : décisions techniques validées, périmètre et points ouverts.
 2. Lire `KNOWLEDGE.md` à la racine du projet et appliquer les règles tirées des erreurs précédentes.
 3. Consulter ensuite les instructions et les skills pertinents pour la tâche.
