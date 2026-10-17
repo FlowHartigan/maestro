@@ -132,3 +132,8 @@ Release active `/var/www/maestro/releases/casa-20261016-220252`, révision `6095
 ## Sélecteur intégré — 17 octobre 2026
 
 Release active switch-20261016-221007, révision 4886397. Sauvegarde /var/backups/maestro/switch-20261016-221007. Mise à jour de présentation uniquement, ni migration SQL ni changement Nginx. Contrôles des quatre routes, ressources, carte Pizza et santé mariage réussis.
+
+
+## Administration séparée et menu Casa — 17 octobre 2026
+
+Release active `/var/www/maestro/releases/daily-final-20261017-085934`, révision `06070a4`. Sauvegarde `/var/backups/maestro/daily-final-20261017-085934`. Migration additive 003 appliquée lors de la première publication du menu (daily-20261016-222000). Images téléversées dans shared/uploads, table daily_menu ; horaires toujours indépendants. Les pages publiques, pizzas et services mariage ont été préservés et vérifiés. Tests API/UI sur une base isolée puis suppression du conteneur, de la base et des fixtures. Aucune modification Nginx ni publication IONOS. Détails dans ADMINISTRATION.md.

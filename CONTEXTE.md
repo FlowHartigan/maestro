@@ -67,7 +67,7 @@ Photos JPG/PNG/WebP, maximum 6 Mo et 24 mégapixels, validation serveur et réen
 - VPS : vps-328a8329.vps.ovh.ca, Ubuntu. SSH utilisateur ubuntu ; clé locale C:\Users\flori\.ssh\festi-app-vps. Utiliser IdentitiesOnly=yes, BatchMode=yes, StrictHostKeyChecking=yes ; sudo -n disponible. Ne pas lire ni copier le contenu de la clé.
 - Site mariage à la racine dms-app.fr : à préserver. API mariage /api/ proxifiée vers 127.0.0.1:3001 ; contrôle http://127.0.0.1:3001/api/health. Ne toucher qu'au périmètre Maestro.
 - Nginx : /etc/nginx/sites-available/festi-app, bloc BEGIN/END MAESTRO PREVIEW. Configuration versionnée deploy/nginx-maestro-location.conf. Pages .html et API Maestro traitées par PHP ; autres PHP et fichiers privés non exposés.
-- Release active après dernière intervention : /var/www/maestro/releases/switch-20261016-221007 ; lien /var/www/maestro/current. REVISION : 4886397. Revalider l'état réel avant toute modification.
+- Release active après dernière intervention : /var/www/maestro/releases/daily-final-20261017-085934 ; lien /var/www/maestro/current. REVISION : 06070a4. Revalider l'état réel avant toute modification.
 - Une release comprend public/ (dist/) et server/ (.build/server/) hors racine publique. config.local.json est un lien vers shared/config.json.
 - Persistance : /var/www/maestro/shared/config.json (root:www-data 0640), shared/uploads. Ne pas supprimer shared ni remplacer la base lors d'une mise à jour.
 - MySQL : conteneur maestro-mysql57, MySQL 5.7.44, réseau maestro-test, aucun port publié ; base maestro_test, utilisateur maestro_app. Secrets privés serveur. Les secrets ne sont pas dans ce document.
@@ -97,7 +97,7 @@ Selon l'environnement du nouveau chat, les commandes peuvent nécessiter un chem
 
 ## Reprise attendue
 
-La présentation de La Casa di Maestro est livrée sur le VPS : bouton entre les deux ambiances, page casa.html, coordonnées Beaumont, menu fourni et horaires distincts dans l’administration. Chamalières et la ligne jour férié sont retirés. Voir CASA.md pour les détails, images et migration 002. Les nouveaux commits restent locaux sur v2 : un contrôle automatique précédent a refusé l’envoi GitHub faute d’autorisation explicite dans ce chat. Attendre cet accord avant de pousser. Les news et le déploiement IONOS ne sont pas demandés.
+L’administration est désormais organisée par établissement : Pizza Maestro (Pizzas et Horaires), La Casa di Maestro (Menu du jour et Horaires). Les horaires sont indépendants. Le menu Casa est une image publiée depuis l’administration, conservée dans les uploads persistants et référencée en MySQL. La migration 003 a été appliquée. Voir ADMINISTRATION.md et CASA.md. L’administration à utiliser est https://dms-app.fr/maestro/administration/ ; les anciennes URL locales 127.0.0.1:18099 étaient des tests temporaires désormais supprimés. Les commits restent locaux sur v2 : le contrôle automatique avait refusé l’envoi GitHub faute d’autorisation explicite ; attendre cet accord avant de pousser. Les news et le déploiement IONOS ne sont pas demandés.
 
 Les aperçus et le fichier privé d'activation initial sont dans l'espace local de préparation, hors Git ; ne jamais recopier leurs secrets dans un compte rendu ou un commit. Lire KNOWLEDGE.md avant d'agir : chemins absolus, GD WebP réel, base Vite ./, cache PHP après bascule et contrôles après rechargement.
 
@@ -110,3 +110,10 @@ Version applicative 6095b2d, release casa-20261016-220252 (horloge serveur UTC),
 ## Sélecteur intégré — 17 octobre 2026
 
 Dernière release : switch-20261016-221007, révision 4886397. Sélecteur compact intégré à un en-tête commun, curseur entre les établissements et fondu natif CSS entre les pages ; préférence de réduction des mouvements respectée. Aucun JavaScript public ajouté. Typecheck, build et sept tests réussis ; navigation souris/clavier, rendu à 320/390/1280 px contrôlés. Quatre pages et ressources en ligne vérifiées, carte Pizza et site mariage inchangés. Aucune migration SQL ni modification Nginx pour cette livraison. Sauvegarde : /var/backups/maestro/switch-20261016-221007. Les commits restent locaux.
+
+
+## Administration par établissement — 17 octobre 2026
+
+Release active daily-final-20261017-085934, révision 06070a4 (fonctionnalité 86d5f1f puis correction de contraste). Sauvegarde /var/backups/maestro/daily-final-20261017-085934. Migration 003 additive exécutée lors de la première publication daily-20261016-222000 ; les pizzas et les horaires existants ont été conservés. Les quatre pages publiques sont identiques avant/après, l’API du menu exige une connexion, ressources admin accessibles et site mariage préservé.
+
+Contrôles exécutés : typecheck, build, sept tests de build, syntaxe PHP 8.4 et tests API MySQL 5.7 isolés : fichiers invalides et trop lourds, authentification, CSRF, téléversement, persistance, conflits, restauration, retrait de la transcription initiale pour un nouveau menu et indépendance des horaires/pizzas. UI vérifiée : choix d’établissement, chargement, aperçu, publication, rechargement, retour aux pizzas, horaires Casa et restauration confirmée ; affichage mobile 390 px sans débordement, aucune erreur console sur ce parcours. Le conteneur maestro-daily-integration, sa base et ses fichiers privés ont été supprimés après les contrôles. Aucun compte de test créé sur la base réelle.
